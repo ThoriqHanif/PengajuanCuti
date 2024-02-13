@@ -6,7 +6,7 @@
               <div class="section-header">
                   <h1>Users</h1>
                   <div class="section-header-breadcrumb">
-                      <div class="breadcrumb-item active"><a href="/">Dasboard</a></div>
+                      <div class="breadcrumb-item active"><a href="{{ route('dashboard') }}">Dasboard</a></div>
                       <div class="breadcrumb-item">Users</div>
                   </div>
               </div>
@@ -19,41 +19,46 @@
                       <div class="col-12">
                           <div class="card">
                               <div class="card-header">
-                                  <a class="btn btn-sm btn-danger float-left text-white" href="{{ route('user.trashed') }}"
-                                      id="showDeletedButtonIntern"><i id="showDeletedIcon"
-                                          class="fas fa-trash mr-2 color-white"></i> Lihat Data Terhapus</a>
-                                  <div class="ml-auto">
-                                      <a href="{{ route('users.create') }}" class="btn btn-sm btn-primary tombol-create"
-                                          data-placement="top" id="btn-create" data-toggle="tooltip"
-                                          title="Tambah Data User">
-                                          <i class="fas fa-plus mr-2"></i> Data User
-                                      </a>
-                                  </div>
+                                  @can('trashed users')
+                                      <a class="btn btn-sm btn-danger float-left text-white" href="{{ route('user.trashed') }}"
+                                          id="showDeletedButtonIntern"><i id="showDeletedIcon"
+                                              class="fas fa-trash mr-2 color-white"></i> Data Terhapus</a>
+                                  @endcan
+                                  @can('create users')
+                                      <div class="ml-auto">
+                                          <a href="{{ route('users.create') }}" class="btn btn-sm btn-primary tombol-create"
+                                              data-placement="top" id="btn-create" data-toggle="tooltip"
+                                              title="Tambah Data User">
+                                              <i class="fas fa-plus mr-2"></i> Data User
+                                          </a>
+                                      </div>
+                                  @endcan
+
 
                               </div>
                               <div class="card-body">
-                                  <div class="table-responsive">
-                                      <table class="table table-striped" id="tableUsers">
-                                          <thead>
-                                              <tr>
-                                                  <th>No</th>
-                                                  <th>Nama Lengkap</th>
-                                                  <th>Telephone</th>
-                                                  <th>Tanggal Masuk</th>
-                                                  <th>Divisi</th>
-                                                  <th>Posisi</th>
-                                                  <th>Manager</th>
-                                                  <th>Role</th>
-                                                  <th>Action</th>
-                                              </tr>
-                                          </thead>
-                                          <tbody>
+                                  {{-- <div class="table-responsive"> --}}
+                                  <table class="table table-striped table-sm" id="tableUsers">
+                                      <thead>
+                                          <tr>
+                                              <th class="table-fit">No</th>
+                                              <th>Nama Lengkap</th>
+                                              <th>Email</th>
+                                              <th>Divisi</th>
+                                              <th>Posisi</th>
+                                              <th>Manager</th>
+                                              <th>Role</th>
+                                              <th>Tanggal Masuk</th>
+                                              <th>Action</th>
+                                          </tr>
+                                      </thead>
+                                      <tbody>
 
-                                          </tbody>
-                                      </table>
+                                      </tbody>
+                                  </table>
 
 
-                                  </div>
+                                  {{-- </div> --}}
                               </div>
                           </div>
                       </div>
@@ -78,7 +83,7 @@
                   var tableUsers = $('#tableUsers').DataTable({
                       processing: true,
                       serverSide: true,
-                      // responsive: true,
+                      responsive: true,
                       ajax: {
                           url: "{{ route('users.index') }}"
                       },
@@ -87,27 +92,26 @@
                               name: 'DT_RowIndex',
                               orderable: false,
                               searchable: false,
+                              class: 'table-fit'
 
                           },
                           {
                               data: 'full_name',
-                              name: 'full_name'
+                              name: 'full_name',
+                              class: 'table-fit'
                           },
                           {
-                              data: 'telp',
-                              name: 'telp'
+                              data: 'email',
+                              name: 'email'
                           },
-                          {
-                              data: 'entry_date',
-                              name: 'entry_date'
-                          },
+                          
                           {
                               data: 'division.name',
                               name: 'division.name',
                               render: function(data, type, full, meta) {
                                   return data || '<p>-</p>';
                               },
-                            //   className: 'text-center'
+                              //   className: 'text-center'
                           },
                           {
                               data: 'position.name',
@@ -119,24 +123,41 @@
                               render: function(data, type, full, meta) {
                                   return data || '<p>-</p>';
                               },
-                            //   className: 'text-center'
+                              //   className: 'text-center'
                           },
                           {
                               data: 'role.name',
-                              name: 'role.name'
+                              name: 'role.name',
+                              className: 'text-capitalize'
                           },
-
+                          {
+                              data: 'entry_date',
+                              name: 'entry_date',
+                              render: function(data, type, row) {
+                                  // Konversi format tanggal ke bahasa Indonesia
+                                  let startDate = new Date(data);
+                                  return startDate.toLocaleDateString('id-ID', {
+                                      weekday: 'long',
+                                      year: 'numeric',
+                                      month: 'long',
+                                      day: 'numeric'
+                                  });
+                              }
+                          },
                           {
                               data: 'action',
                               name: 'action',
+                              class: 'table-fit'
                           },
 
 
-                      ]
+                      ],
+                      columnDefs: [{
+                          targets: -1,
+                          responsivePriority: 1
+                      }]
                   });
               });
           </script>
-
-
       @endpush
   @endsection

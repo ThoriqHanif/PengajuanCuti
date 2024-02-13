@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -29,10 +30,13 @@ class User extends Authenticatable
         'division_id',
         'position_id',
         'manager_id',
+        'coo_id',
         'role_id',
-        
 
     ];
+
+    // protected $guard_name = 'web';
+
 
 
     /**
@@ -71,8 +75,15 @@ class User extends Authenticatable
         return $this->belongsTo(User::class, 'manager_id');
     }
 
+    public function coo()
+    {
+        // Jika positions selain staff memiliki user sebagai manager
+        return $this->belongsTo(User::class, 'coo_id');
+    }
+
+
     public function role()
     {
-        return $this->belongsTo(Roles::class);
+        return $this->belongsTo(Role::class);
     }
 }

@@ -4,8 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+// use Spatie\Permission\Traits\HasPermissions;
+use Spatie\Permission\Models\Role as SpatieRole;
 
-class Roles extends Model
+class Role extends SpatieRole
 {
     use HasFactory;
 
@@ -15,8 +17,6 @@ class Roles extends Model
         'name'
     ];
 
-    public function permissions()
-    {
-        return $this->belongsToMany(Permissions::class, 'permission_role', 'role_id', 'permission_id');
-    }
+    protected $guard_name = 'web';
+    
 }

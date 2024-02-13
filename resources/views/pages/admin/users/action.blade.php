@@ -1,43 +1,55 @@
 @if (!$users->trashed())
-    <a class="btn btn-sm bg-primary text-white font-weight-bold text-xs detail-user" data-toggle="tooltip"
-        data-placement="top" title="Detail User" data-users-id="{{ $users->id }}" href="{{route ('users.show', $users->id)}}">
-        <i class="fas fa-eye"></i>
-    </a>
+    @can('show users')
+        <a class="btn btn-sm bg-primary text-white font-weight-bold text-xs detail-user" data-toggle="tooltip"
+            data-placement="top" title="Detail User" data-users-id="{{ $users->id }}"
+            href="{{ route('users.show', $users->id) }}">
+            <i class="fas fa-eye"></i>
+        </a>
+    @endcan
 
-    <a class="btn btn-sm bg-warning text-white font-weight-bold text-xs edit-user" data-placement="top" id="btn-edit-user"
-        title="Edit User" data-users-id="{{ $users->id }}" data-users-level="{{$users->position->level}}" href="{{route ('users.edit', $users->id)}}">
-        <i class="fas fa-edit"></i>
-    </a>
+    @can('edit users')
+        <a class="btn btn-sm bg-warning text-white font-weight-bold text-xs edit-user" data-placement="top" id="btn-edit-user"
+            title="Edit User" data-users-id="{{ $users->id }}" data-users-level="{{ $users->position->level }}"
+            href="{{ route('users.edit', $users->id) }}">
+            <i class="fas fa-edit"></i>
+        </a>
+    @endcan
 
-    <form style="display: inline" action="{{ route('users.destroy', $users->id) }}" method="POST">
-        @csrf
-        @method('DELETE')
-        <button type="submit" class="btn btn-sm btn-danger delete-button" data-toggle="tooltip" data-placement="top"
-            title="Hapus User">
-            <i class="fas fa-trash"></i>
-        </button>
-    </form>
+
+    @can('delete users')
+        <form style="display: inline" action="{{ route('users.destroy', $users->id) }}" method="POST">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-sm btn-danger delete-button" data-toggle="tooltip" data-placement="top"
+                title="Hapus User">
+                <i class="fas fa-trash"></i>
+            </button>
+        </form>
+    @endcan
 @endif
 
 @if ($users->trashed())
-    <form style="display: inline" action="{{ route('user.restore', $users->id) }}" method="POST"
-        id="restoreFormUsers">
-        @csrf
-        <button type="submit" class="btn btn-sm btn-info restore-button-users" data-toggle="tooltip"
-            data-placement="top" title="Restore User">
-            <i class="fas fa-undo"></i>
-        </button>
+    @can('restore users')
+        <form style="display: inline" action="{{ route('user.restore', $users->id) }}" method="POST" id="restoreFormUsers">
+            @csrf
+            <button type="submit" class="btn btn-sm btn-info restore-button-users" data-toggle="tooltip"
+                data-placement="top" title="Restore User">
+                <i class="fas fa-undo"></i>
+            </button>
 
-    </form>
-    <form style="display: inline" action="{{ route('user.forceDelete', $users->id) }}" method="POST"
-        id="forceDeleteFormUsers">
-        @csrf
-        @method('DELETE')
-        <button type="submit" class="btn btn-sm btn-danger delete-button-users" data-toggle="tooltip"
-            data-placement="top" title="Hapus Permanen User">
-            <i class="fas fa-trash"></i>
-        </button>
-    </form>
+        </form>
+    @endcan
+    @can('force-delete users')
+        <form style="display: inline" action="{{ route('user.forceDelete', $users->id) }}" method="POST"
+            id="forceDeleteFormUsers">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-sm btn-danger delete-button-users" data-toggle="tooltip"
+                data-placement="top" title="Hapus Permanen User">
+                <i class="fas fa-trash"></i>
+            </button>
+        </form>
+    @endcan
 @endif
 
 

@@ -21,8 +21,10 @@ return new class extends Migration
             $table->unsignedBigInteger('division_id')->nullable();
             $table->unsignedBigInteger('position_id');
             $table->unsignedBigInteger('manager_id')->nullable();
+            $table->unsignedBigInteger('coo_id')->nullable();
             $table->unsignedBigInteger('role_id')->nullable();
             $table->string('email')->unique();
+            $table->string('photo')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
@@ -31,6 +33,7 @@ return new class extends Migration
 
             $table->foreign('division_id')->references('id')->on('divisions');
             $table->foreign('manager_id')->references('id')->on('users');
+            $table->foreign('coo_id')->references('id')->on('users');
             $table->foreign('position_id')->references('id')->on('positions');
             $table->foreign('role_id')->references('id')->on('roles');
         });

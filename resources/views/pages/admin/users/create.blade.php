@@ -7,11 +7,11 @@
                 <div class="section-header-back">
                     <a href="{{ route('users.index') }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
                 </div>
-                <h1>Create New User</h1>
+                <h1>Tambah User Baru</h1>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="/">Dashboard</a></div>
                     <div class="breadcrumb-item"><a href="{{ route('users.index') }}">Users</a></div>
-                    <div class="breadcrumb-item">Create New User</div>
+                    <div class="breadcrumb-item">Tambah User</div>
                 </div>
             </div>
 
@@ -129,7 +129,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="form-group row mb-4" id="divisionField" style="display: none;">
+                                    <div class="form-group row mb-4 d-none" id="divisionField">
                                         <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Divisi <span
                                                 class="text-danger"> *</span>
                                         </label>
@@ -144,18 +144,26 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group row mb-4 manager-row" id="managerField"
-                                        style="display: none;">
-                                        <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Manager <span
+                                    <div class="form-group row mb-4 atasan-row d-none" id="atasanField">
+                                        <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Atasan <span
                                                 class="text-danger"> *</span>
                                         </label>
                                         <div class="col-sm-12 col-md-7">
-                                            <select class="form-control selectric" name="manager_id" id="managerSelect">
-                                                <option value="" selected>Pilih Manager</option>
+                                            <select class="form-control selectric" name="manager_id" id="atasanSelect">
+                                                <option value="" selected>Pilih Atasan</option>
 
                                             </select>
                                         </div>
                                     </div>
+
+                                    <div class="form-group row mb-4 d-none">
+                                        <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">COO ID</label>
+                                        <div class="col-sm-12 col-md-7">
+                                            <input type="text" class="form-control" id="coo_id" name="coo_id"
+                                                readonly>
+                                        </div>
+                                    </div>
+
                                     <div class="form-group row mb-4">
                                         <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Role <span
                                                 class="text-danger"> *</span>
@@ -173,7 +181,7 @@
                                     <div class="form-group row mb-4">
                                         <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3"></label>
                                         <div class="col-sm-12 col-md-7">
-                                            <button type="submit" class="btn btn-primary">Create Users</button>
+                                            <button type="submit" class="btn btn-primary">Buat Users</button>
                                         </div>
                                     </div>
 
@@ -183,254 +191,80 @@
                 </div>
             </div>
 
-            {{-- <div class="card">
-                <div class="card-header">
-                    <h4>Hak Akses</h4>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label class="col-form-label">Admin</label>
-                                <div class="custom-switches-stacked mt-4">
-                                    <label class="custom-switch">
-                                        <input type="checkbox" id="toggleAdmin" class="custom-switch-input">
-                                        <span class="custom-switch-indicator"></span>
-                                        <span class="custom-switch-description">Pilih Semua</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
 
-                        @php
-                            $groupedPermissions = $permissions->groupBy('menu_name');
-                        @endphp
-
-                        @foreach ($groupedPermissions as $menuName => $menuPermissions)
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label class="col-form-label">Menu {{ $menuName }}</label>
-                                    
-                                    <div class="custom-switches-stacked mt-4">
-                                        @foreach ($menuPermissions as $permission)
-                                            <label class="custom-switch">
-                                                <input type="checkbox" name="permissions[]"
-                                                    value="{{ $permission->id }}" class="custom-switch-input">
-                                                <span class="custom-switch-indicator"></span>
-                                                <span class="custom-switch-description">{{ $permission->name }}</span>
-                                            </label>
-                                        @endforeach
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div> --}}
             </form>
 
         </section>
     </div>
 
+    {{-- FIX JIKA TANPA COO --}}
     {{-- <script>
         $(document).ready(function() {
-            $('#divisionSelect').on('change', function() {
+            var divisionField = $('#divisionField');
+            var atasanField = $('#atasanField');
+            var positionSelect = $('#position_id');
+            var divisionSelect = $('#division_id');
+            var atasanSelect = $('#atasanSelect');
 
-                var selectedDivision = $(this).val();
-                console.log(selectedDivision);
-    
+            positionSelect.change(function() {
+                var selectedPositionId = $(this).val();
+                console.log('Id Posisi yang diplih : ' + selectedPositionId);
+
+                if (selectedPositionId) {
+                    // Fetch position level based on selected position_id
+                    fetchPositionLevel(selectedPositionId);
+                } else {
+                    divisionField.addClass('d-none');
+                    atasanField.addClass('d-none');
+                }
+            });
+
+            divisionSelect.change(function() {
+                var selectedPositionId = positionSelect.val();
+                var selectedDivisionId = $(this).val();
+
+                if (selectedPositionId && selectedPositionId > 1 && selectedDivisionId) {
+                    atasanField.removeClass('d-none');
+                    fetchManagers(selectedPositionId, selectedDivisionId);
+                } else {
+                    atasanField.addClass('d-none');
+                }
+            });
+
+            function fetchPositionLevel(positionId) {
                 $.ajax({
-                    url: '{{ route('user.manager') }}',
                     type: 'GET',
-                    data: { division_id: selectedDivisionId },
-                    success: function(response) {
-                        console.log(response);
-
-                        $('#managerSelect').empty();
-    
-                        $.each(response.managers, function(index, manager) {
-                            $('#managerSelect').append('<option value="' + manager.id + '">' + manager.full_name + '</option>');
-                        });
+                    url: '{{ route('user.getPositionLevel') }}',
+                    data: {
+                        position_id: positionId
                     },
-                    error: function(xhr, status, error) {
-                        console.error(error);
+                    success: function(data) {
+                        // Show division field if position level is 2, 3, or 4
+                        if (data > 1) {
+                            divisionField.removeClass('d-none');
+                        } else {
+                            divisionField.addClass('d-none');
+                        }
+
+                        // Trigger change event on divisionSelect to update managers
+                        divisionSelect.trigger('change');
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        console.error('Error fetching position level:', errorThrown);
                     }
                 });
-            });
-        });
-    </script> --}}
+            }
 
-
-    {{-- <script>
-        $(document).ready(function() {
-            $('#position_id').change(function() {
-                var selectedLevel = $(this).find(':selected').data('level');
-
-                console.log(selectedLevel);
-                if (selectedLevel === 1) {
-                    $('#managerField').hide();
-                    $('select[id="managerSelect"]').val('');
-                } else {
-                    $('#managerField').show();
-                }
-            });
-
-            $('#division_id').change(function() {
-                var selectedDivisionId = $(this).val();
-                console.log(selectedDivisionId);
-
-                if (selectedDivisionId) {
-                    $.ajax({
-                        type: 'GET',
-                        url: '{{ route('user.manager') }}',
-                        data: {
-                            division_id: selectedDivisionId
-                        },
-                        success: function(data) {
-                            console.log(data);
-                            var managerSelect = $('select[id="managerSelect"]');
-                            console.log(managerSelect);
-
-                            managerSelect.empty().append('<option value="" selected>Pilih Manager</option>');
-
-                            // managerSelect.find('option:not(:first)').remove();
-
-                            $.each(data, function(index, manager) {
-                                var positionName = (manager.position && manager.position.name) ? manager.position.name : '';
-
-                                console.log(manager.id, manager.full_name, positionName);
-
-                                managerSelect.append('<option value="' + manager.id + '">' + manager.full_name + ' (' + positionName + ')</option>');
-                                
-                            });
-                            console.log(managerSelect.html());
-                        },
-                        error: function(xhr, textStatus, errorThrown) {
-                            console.error('Error fetching managers:', errorThrown);
-                        }
-                    });
-                } else {
-                    var managerSelect = $('select[name="manager_id"]');
-                    
-                    managerSelect.empty().append(
-                        '<option value="" selected>Pilih Divisi Terlebih Dahulu</option>');
-                }
-            });
-        });
-    </script> --}}
-
-    {{-- <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            $('#position_id').change(function() {
-                var selectedLevel = $(this).find(':selected').data('level');
-    
-                if (selectedLevel === 1) {
-                    // Jika level adalah 1, sembunyikan divisi
-                    $('#divisionField').hide();
-                    $('select[id="division_id"]').val('');
-                } else {
-                    // Jika level bukan 1, tampilkan divisi
-                    $('#divisionField').show();
-                }
-            });
-        });
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var managerSelect = document.getElementById('managerSelect');
-            var defaultOption = '<option value="" selected>Pilih Manager</option>';
-            
-
-            $('#managerSelect').selectric();
-
-            $('#position_id, #division_id').change(function() {
-                var selectedLevel = $('#position_id').find(':selected').data('level'); 
-                // SelectedLevel = Level dari position yang dipilih di select
-                console.log(selectedLevel);
-                
-                var selectedDivisionId = $('#division_id').val();
-                // selectedDivisionId = divisi_id yang dipilih dari select Divisi
-                console.log(selectedDivisionId);
-
-                
-
-                if (selectedLevel === 1 || !selectedDivisionId) {
-                    $('#managerField').hide();
-                    managerSelect.innerHTML = defaultOption;
-                    // Jika level position yg dipilih 1 -> manager hide & set defaultOption
-
-                } else {
-                    $('#managerField').show();
-                    // Jika bukan level position yg dipilih 1 -> manager muncul
-
-                    $.ajax({
-                        type: 'GET',
-                        url: '{{ route('user.manager') }}',
-                        data: {
-                            division_id: selectedDivisionId,
-                            position_level : positionLevel,
-                        },
-                        success: function(data) {
-                            managerSelect.innerHTML = defaultOption;
-
-                            data.forEach(function(manager) {
-                                var positionName = (manager.position && manager.position.name) ? manager.position.name : '';
-                                var optionText = manager.full_name + (positionName ? ' (' + positionName + ')' : '');
-
-                                var option = document.createElement('option');
-                                option.value = manager.id;
-                                option.textContent = optionText;
-
-                                managerSelect.appendChild(option);
-                            });
-
-                            $(managerSelect).selectric('refresh');
-
-                        },
-                        error: function(xhr, textStatus, errorThrown) {
-                            console.error('Error fetching managers:', errorThrown);
-                        }
-                    });
-                }
-            });
-        });
-    </script> --}}
-    {{-- <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var managerSelect = document.getElementById('managerSelect');
-            var defaultOption = '<option value="" selected>Pilih Manager</option>';
-
-            $('#managerSelect').selectric();
-
-            function fetchManagers(divisionId) {
+            function fetchManagers(positionId, divisionId) {
                 $.ajax({
                     type: 'GET',
-                    url: '{{ route('user.manager') }}',
+                    url: '{{ route('user.getManagers') }}',
                     data: {
+                        position_id: positionId,
                         division_id: divisionId
                     },
                     success: function(data) {
-                        managerSelect.innerHTML = defaultOption;
-
-                        data.forEach(function(manager) {
-                            var positionName = (manager.position && manager.position.name) ?
-                                manager.position.name : '';
-                            var optionText = manager.full_name + (positionName ? ' (' +
-                                positionName + ')' : '');
-
-                            var option = document.createElement('option');
-                            option.value = manager.id;
-                            option.setAttribute('data-division',
-                            divisionId); // Menandai opsi dengan division_id
-                            option.textContent = optionText;
-
-                            managerSelect.appendChild(option);
-                        });
-
-                        $(managerSelect).selectric('refresh');
+                        populateAtasanOptions(data);
                     },
                     error: function(xhr, textStatus, errorThrown) {
                         console.error('Error fetching managers:', errorThrown);
@@ -438,76 +272,172 @@
                 });
             }
 
-            function fetchTopManagers() {
+            function populateAtasanOptions(data) {
+                atasanSelect.empty().append('<option value="" selected>Pilih Atasan</option>');
+
+                if (data && data.length > 0) {
+                    $.each(data, function(index, manager) {
+                        var positionName = manager.position ? ' (' + manager.position.name + ')' : '';
+                        var optionText = manager.full_name + positionName;
+
+                        atasanSelect.append('<option value="' + manager.id + '">' + optionText +
+                            '</option>');
+                    });
+                }
+
+                atasanSelect.selectric('refresh');
+            }
+        });
+    </script> --}}
+
+    <script>
+        $(document).ready(function() {
+            var divisionField = $('#divisionField');
+            var atasanField = $('#atasanField');
+            var positionSelect = $('#position_id');
+            var divisionSelect = $('#division_id');
+            var atasanSelect = $('#atasanSelect');
+            var cooIdInput = $('#coo_id');
+    
+            positionSelect.change(function() {
+                var selectedPositionId = $(this).val();
+    
+                if (selectedPositionId) {
+                    fetchPositionLevel(selectedPositionId);
+                } else {
+                    divisionField.addClass('d-none');
+                    atasanField.addClass('d-none');
+                }
+            });
+    
+            divisionSelect.change(function() {
+                var selectedPositionId = positionSelect.val();
+                var selectedDivisionId = $(this).val();
+    
+                if (selectedPositionId && selectedPositionId > 1 && selectedDivisionId) {
+                    atasanField.removeClass('d-none');
+                    fetchManagers(selectedPositionId, selectedDivisionId);
+                } else {
+                    atasanField.addClass('d-none');
+                }
+            });
+    
+            atasanSelect.change(function() {
+                var selectedManagerId = $(this).val();
+    
+                if (selectedManagerId) {
+                    fetchCooId(selectedManagerId);
+                }
+            });
+    
+            function fetchPositionLevel(positionId) {
                 $.ajax({
                     type: 'GET',
-                    url: '{{ route('user.topManagers') }}',
+                    url: '{{ route('user.getPositionLevel') }}',
+                    data: {
+                        position_id: positionId
+                    },
                     success: function(data) {
-                        managerSelect.innerHTML = defaultOption;
-
-                        data.forEach(function(manager) {
-                            var positionName = (manager.position && manager.position.name) ?
-                                manager.position.name : '';
-                            var optionText = manager.full_name + (positionName ? ' (' +
-                                positionName + ')' : '');
-
-                            var option = document.createElement('option');
-                            option.value = manager.id;
-                            option.setAttribute('data-division',
-                            'all'); // Menandai opsi untuk top managers
-                            option.textContent = optionText;
-
-                            managerSelect.appendChild(option);
-                        });
-
-                        $(managerSelect).selectric('refresh');
+                        if (data > 1) {
+                            divisionField.removeClass('d-none');
+                        } else {
+                            divisionField.addClass('d-none');
+                        }
+    
+                        divisionSelect.trigger('change');
                     },
                     error: function(xhr, textStatus, errorThrown) {
-                        console.error('Error fetching top managers:', errorThrown);
+                        console.error('Error fetching position level:', errorThrown);
                     }
                 });
             }
+    
+            function fetchManagers(positionId, divisionId) {
+                $.ajax({
+                    type: 'GET',
+                    url: '{{ route('user.getManagers') }}',
+                    data: {
+                        position_id: positionId,
+                        division_id: divisionId
+                    },
+                    success: function(data) {
+                        populateAtasanOptions(data);
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        console.error('Error fetching managers:', errorThrown);
+                    }
+                });
+            }
+    
+            function populateAtasanOptions(data) {
+                atasanSelect.empty().append('<option value="" selected>Pilih Atasan</option>');
+    
+                if (data && data.length > 0) {
+                    $.each(data, function(index, manager) {
+                        var positionName = manager.position ? ' (' + manager.position.name + ')' : '';
+                        var optionText = manager.full_name + positionName;
+    
+                        atasanSelect.append('<option value="' + manager.id + '">' + optionText +
+                            '</option>');
+                    });
+                }
+    
+                atasanSelect.selectric('refresh');
+            }
+    
+            function fetchCooId(managerId) {
+                $.ajax({
+                    type: 'GET',
+                    url: '{{ route('user.getCooId') }}',
+                    data: {
+                        manager_id: managerId
+                    },
+                    success: function(data) {
+                        if (data && data.coo_id) {
+                            cooIdInput.val(data.coo_id);
+                        } else {
+                            console.error('COO ID not found for selected manager.');
+                        }
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        console.error('Error fetching COO ID:', errorThrown);
+                    }
+                });
+            }
+        });
+    </script>
+    
 
-            $('#position_id, #division_id').change(function() {
-                var selectedLevel = $('#position_id').find(':selected').data('level');
-                var selectedDivisionId = $('#division_id').val();
 
-                if (selectedLevel === 1 || !selectedDivisionId) {
-                    $('#managerField').hide();
-                    fetchTopManagers();
+
+    {{-- <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            $('#position_id').change(function() {
+                var selectedLevel = $(this).find(':selected').data('level');
+                console.log(selectedLevel);
+
+                if (selectedLevel === 1) {
+                    $('#divisionField').hide();
+                    $('#atasanField').hide();
+                    $('select[id="division_id"]').val('');
+                    $('select[id="manager_id"]').val('');
                 } else {
-                    $('#managerField').show();
-                    fetchTopManagers().;
-                    fetchManagers(selectedDivisionId);
-
+                    $('#divisionField').show();
+                    $('#atasanField').show();
                 }
             });
         });
     </script> --}}
 
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            $('#position_id').change(function() {
-                var selectedLevel = $(this).find(':selected').data('level');
-
-                if (selectedLevel === 1) {
-                    $('#divisionField').hide();
-                    $('select[id="division_id"]').val('');
-                } else {
-                    $('#divisionField').show();
-                }
-            });
-        });
-    </script>
-
-
-    <script>
+    {{-- <script>
         document.addEventListener('DOMContentLoaded', function() {
             var managerSelect = document.getElementById('managerSelect');
+            var cooSelect = document.getElementById('cooSelect');
             var defaultOption = '<option value="" selected>Pilih Manager</option>';
+            var defaultOptionCOO = '<option value="" selected>Pilih COO</option>';
 
             $('#managerSelect').selectric();
+            $('#cooSelect').selectric();
 
             function fetchManagers(divisionId) {
                 $.ajax({
@@ -555,6 +485,41 @@
                 $(managerSelect).selectric('refresh');
             }
 
+            function fetchCOOs(divisionId) {
+                $.ajax({
+                    type: 'GET',
+                    url: '{{ route('user.coo') }}',
+                    data: {
+                        division_id: divisionId
+                    },
+                    success: function(data) {
+                        appendCOOOptions(data);
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        console.error('Error fetching COOs:', errorThrown);
+                    }
+                });
+            }
+
+            function appendCOOOptions(data) {
+                var cooSelect = document.getElementById('cooSelect');
+                cooSelect.innerHTML = defaultOptionCOO;
+
+                data.forEach(function(coo) {
+                    var positionName = (coo.position && coo.position.name) ? coo.position.name : '';
+                    console.log(positionName);
+                    var optionText = coo.full_name + (positionName ? ' (' + positionName + ')' : '');
+                    var option = document.createElement('option');
+                    option.value = coo.id;
+                    option.textContent = optionText;
+
+                    cooSelect.appendChild(option);
+                });
+
+                $(cooSelect).selectric('refresh');
+            }
+
+        
             $('#division_id').change(function() {
                 var selectedLevel = $('#position_id').find(':selected').data('level');
                 var selectedDivisionId = $(this).val();
@@ -565,14 +530,23 @@
 
                     fetchManagers(selectedDivisionId);
                     fetchTopManagers();
+
+                    if (selectedLevel === 4) {
+                        $('#cooField').show();
+                        cooSelect.innerHTML = defaultOptionCOO;
+
+                        fetchCOOs(selectedDivisionId);
+                    } else {
+                        $('#cooField').hide();
+                        // $('select[id="coo_id"]').val('');
+                    }
                 } else {
                     $('#managerField').hide();
+                    $('#cooField').hide();
                 }
             });
         });
-    </script>
-
-
+    </script> --}}
 
     <script>
         $(document).ready(function() {

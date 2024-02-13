@@ -7,11 +7,11 @@
                 <div class="section-header-back">
                     <a href="{{ route('roles.index') }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
                 </div>
-                <h1>Create New Role</h1>
+                <h1>Tambah Role Baru</h1>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="/">Dashboard</a></div>
                     <div class="breadcrumb-item"><a href="{{ route('roles.index') }}">Roles</a></div>
-                    <div class="breadcrumb-item">Create New Role</div>
+                    <div class="breadcrumb-item">Tambah Role</div>
                 </div>
             </div>
 
@@ -58,23 +58,20 @@
                         </div>
                     </div>
                     <div class="row">
-
                         @php
                             $groupedPermissions = $permissions->groupBy('menu_name');
                         @endphp
-
+                
                         @foreach ($groupedPermissions as $menuName => $menuPermissions)
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label class="col-form-label">Menu {{ $menuName }}</label>
-                                    
                                     <div class="custom-switches-stacked mt-4">
                                         @foreach ($menuPermissions as $permission)
                                             <label class="custom-switch">
-                                                <input type="checkbox" name="permissions[]"
-                                                    value="{{ $permission->id }}" class="custom-switch-input">
+                                                <input type="checkbox" name="permissions[]" value="{{ $permission->name }}" class="custom-switch-input">
                                                 <span class="custom-switch-indicator"></span>
-                                                <span class="custom-switch-description">{{ $permission->name }}</span>
+                                                <span class="custom-switch-description">{{ $permission->alias }}</span>
                                             </label>
                                         @endforeach
                                     </div>
@@ -84,7 +81,7 @@
                     </div>
                 </div>
             </div>
-            <button class="btn btn-primary float-left">Create Role</button>
+            <button class="btn btn-primary float-left">Buat Role</button>
         </form>
 
         </section>
@@ -176,4 +173,44 @@
         });
     });
 </script>
+
+<!-- Letakkan di bagian akhir sebelum </body> -->
+{{-- <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Select all checkboxes with name="permissions[]"
+        var permissionCheckboxes = document.querySelectorAll('input[name="permissions[]"]');
+
+        // Event listener untuk checkbox "Pilih Semua"
+        document.getElementById('toggleAdmin').addEventListener('change', function() {
+            var isChecked = this.checked;
+            
+            // Setel status centang pada semua checkbox permissions
+            permissionCheckboxes.forEach(function(checkbox) {
+                checkbox.checked = isChecked;
+            });
+        });
+
+        // Event listener untuk checkbox permissions
+        permissionCheckboxes.forEach(function(checkbox) {
+            checkbox.addEventListener('change', function() {
+                updateSelectedPermissions();
+            });
+        });
+
+        function updateSelectedPermissions() {
+            var selectedPermissions = [];
+
+            // Ambil nilai dari checkbox yang dicentang
+            permissionCheckboxes.forEach(function(checkbox) {
+                if (checkbox.checked) {
+                    selectedPermissions.push(checkbox.value);
+                }
+            });
+
+            // Setel nilai dari input "name=permissions[]" dengan nilai yang dipilih
+            document.getElementById('selectedPermissions').value = selectedPermissions.join(',');
+        }
+    });
+</script> --}}
+
 @endsection

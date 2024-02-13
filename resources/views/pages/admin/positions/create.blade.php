@@ -18,7 +18,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>LevelPosisi</label>
+                        <label>Level Posisi</label>
                         <div class="input-group">
                             <input type="text" class="form-control" placeholder="eg. 1" name="level"
                                 id="level">

@@ -13,6 +13,19 @@ class PositionsController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+     public function __construct()
+     {
+         $this->middleware("permission:index positions", ['only' => ['index']]);
+         $this->middleware("permission:show positions", ['only' => ['show']]);
+         $this->middleware("permission:create positions", ['only' => ['create', 'store']]);
+         $this->middleware("permission:edit positions", ['only' => ['edit', 'update']]);
+         $this->middleware("permission:delete positions", ['only' => ['destroy']]);
+         $this->middleware("permission:trashed positions", ['only' => ['trashed']]);
+         $this->middleware("permission:restore positions", ['only' => ['restore']]);
+         $this->middleware("permission:force-delete positions", ['only' => ['forceDelete']]);
+     }
+
     public function index(Request $request)
     {
         if ($request->ajax()) {

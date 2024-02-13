@@ -6,7 +6,7 @@
               <div class="section-header">
                   <h1>Divisions</h1>
                   <div class="section-header-breadcrumb">
-                      <div class="breadcrumb-item active"><a href="/">Dasboard</a></div>
+                      <div class="breadcrumb-item active"><a href="{{ route('dashboard') }}">Dasboard</a></div>
                       <div class="breadcrumb-item">Divisions</div>
                   </div>
               </div>
@@ -19,16 +19,22 @@
                       <div class="col-12">
                           <div class="card">
                               <div class="card-header">
-                                  <a class="btn btn-sm btn-danger float-left text-white" href="{{route('division.trashed')}}"
-                                      id="showDeletedButtonIntern"><i id="showDeletedIcon"
-                                          class="fas fa-trash mr-2 color-white"></i> Lihat Data Terhapus</a>
-                                  <div class="ml-auto">
-                                      <button type="button" class="btn btn-sm btn-primary tombol-create"
-                                          data-placement="top" id="btn-create" data-tooltip-toggle="tooltip"
-                                          title="Tambah Data Divisi" data-toggle="modal" data-target="#modalCreateDivisi">
-                                          <i class="fas fa-plus mr-2"></i> Data Divisi
-                                      </button>
-                                  </div>
+                                  @can('trashed divisions')
+                                      <a class="btn btn-sm btn-danger float-left text-white"
+                                          href="{{ route('division.trashed') }}" id="showDeletedButtonIntern"><i
+                                              id="showDeletedIcon" class="fas fa-trash mr-2 color-white"></i> Lihat Data
+                                          Terhapus</a>
+                                  @endcan
+
+                                  @can('create divisions')
+                                      <div class="ml-auto">
+                                          <button type="button" class="btn btn-sm btn-primary tombol-create"
+                                              data-placement="top" id="btn-create" data-tooltip-toggle="tooltip"
+                                              title="Tambah Data Divisi" data-toggle="modal" data-target="#modalCreateDivisi">
+                                              <i class="fas fa-plus mr-2"></i> Data Divisi
+                                          </button>
+                                      </div>
+                                  @endcan
 
                               </div>
                               <div class="card-body">
@@ -36,9 +42,9 @@
                                       <table class="table table-striped" id="tableDivisions">
                                           <thead>
                                               <tr>
-                                                  <th>No</th>
+                                                  <th class="table-fit">No</th>
                                                   <th>Nama Divisi</th>
-                                                  <th>Action</th>
+                                                  <th class="table-fit">Action</th>
                                               </tr>
                                           </thead>
                                           <tbody>
@@ -81,6 +87,7 @@
                               name: 'DT_RowIndex',
                               orderable: false,
                               searchable: false,
+                              class: 'table-fit'
 
                           },
                           {
@@ -90,6 +97,7 @@
                           {
                               data: 'action',
                               name: 'action',
+                              class: 'table-fit'
                           },
 
 

@@ -1,43 +1,53 @@
 @if (!$divisions->trashed())
-    <a class="btn btn-sm bg-primary text-white font-weight-bold text-xs detail-divisi" data-toggle="tooltip"
-        data-placement="top" title="Detail Divisi" data-divisions-id="{{ $divisions->id }}">
-        <i class="fas fa-eye"></i>
-    </a>
+    @can('show divisions')
+        <a class="btn btn-sm bg-primary text-white font-weight-bold text-xs detail-divisi" data-toggle="tooltip"
+            data-placement="top" title="Detail Divisi" data-divisions-id="{{ $divisions->id }}">
+            <i class="fas fa-eye"></i>
+        </a>
+    @endcan
+    @can('edit divisions')
+        <a class="btn btn-sm bg-warning text-white font-weight-bold text-xs edit-divisi" data-placement="top"
+            title="Edit Divisi" data-divisions-id="{{ $divisions->id }}">
+            <i class="fas fa-edit"></i>
+        </a>
+    @endcan
 
-    <a class="btn btn-sm bg-warning text-white font-weight-bold text-xs edit-divisi" data-placement="top"
-        title="Edit Divisi" data-divisions-id="{{ $divisions->id }}">
-        <i class="fas fa-edit"></i>
-    </a>
-
-    <form style="display: inline" action="{{ route('divisions.destroy', $divisions->id) }}" method="POST">
-        @csrf
-        @method('DELETE')
-        <button type="submit" class="btn btn-sm btn-danger delete-button" data-toggle="tooltip" data-placement="top"
-            title="Hapus Divisi">
-            <i class="fas fa-trash"></i>
-        </button>
-    </form>
+    @can('delete divisions')
+        <form style="display: inline" action="{{ route('divisions.destroy', $divisions->id) }}" method="POST">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-sm btn-danger delete-button" data-toggle="tooltip" data-placement="top"
+                title="Hapus Divisi">
+                <i class="fas fa-trash"></i>
+            </button>
+        </form>
+    @endcan
 @endif
 
 @if ($divisions->trashed())
-    <form style="display: inline" action="{{ route('division.restore', $divisions->id) }}" method="POST"
-        id="restoreFormDivisions">
-        @csrf
-        <button type="submit" class="btn btn-sm btn-info restore-button-divisions" data-toggle="tooltip"
-            data-placement="top" title="Restore Divisi">
-            <i class="fas fa-undo"></i>
-        </button>
+    @can('restore divisions')
+        <form style="display: inline" action="{{ route('division.restore', $divisions->id) }}" method="POST"
+            id="restoreFormDivisions">
+            @csrf
+            <button type="submit" class="btn btn-sm btn-info restore-button-divisions" data-toggle="tooltip"
+                data-placement="top" title="Restore Divisi">
+                <i class="fas fa-undo"></i>
+            </button>
 
-    </form>
-    <form style="display: inline" action="{{ route('division.forceDelete', $divisions->id) }}" method="POST"
-        id="forceDeleteFormDivisions">
-        @csrf
-        @method('DELETE')
-        <button type="submit" class="btn btn-sm btn-danger delete-button-divisions" data-toggle="tooltip"
-            data-placement="top" title="Hapus Permanen Divisi">
-            <i class="fas fa-trash"></i>
-        </button>
-    </form>
+        </form>
+    @endcan
+
+    @can('force-delete divisions')
+        <form style="display: inline" action="{{ route('division.forceDelete', $divisions->id) }}" method="POST"
+            id="forceDeleteFormDivisions">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-sm btn-danger delete-button-divisions" data-toggle="tooltip"
+                data-placement="top" title="Hapus Permanen Divisi">
+                <i class="fas fa-trash"></i>
+            </button>
+        </form>
+    @endcan
 @endif
 
 

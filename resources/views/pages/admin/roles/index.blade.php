@@ -6,7 +6,7 @@
               <div class="section-header">
                   <h1>Roles</h1>
                   <div class="section-header-breadcrumb">
-                      <div class="breadcrumb-item active"><a href="/">Dasboard</a></div>
+                      <div class="breadcrumb-item active"><a href="{{ route('dashboard') }}">Dasboard</a></div>
                       <div class="breadcrumb-item">Roles</div>
                   </div>
               </div>
@@ -22,13 +22,15 @@
                                   {{-- <a class="btn btn-sm btn-danger float-left text-white" href="{{route('role.trashed')}}"
                                       id="showDeletedButtonIntern"><i id="showDeletedIcon"
                                           class="fas fa-trash mr-2 color-white"></i> Lihat Data Terhapus</a> --}}
-                                  <div class="ml-auto">
-                                      <a href="{{route('roles.create')}}" class="btn btn-sm btn-primary tombol-create"
-                                          data-placement="top" id="btn-create" data-toggle="tooltip"
-                                          title="Tambah Data Roles">
-                                          <i class="fas fa-plus mr-2"></i> Data Roles
-                                      </a>
-                                  </div>
+                                  @can('create roles')
+                                      <div class="ml-auto">
+                                          <a href="{{ route('roles.create') }}" class="btn btn-sm btn-primary tombol-create"
+                                              data-placement="top" id="btn-create" data-toggle="tooltip"
+                                              title="Tambah Data Roles">
+                                              <i class="fas fa-plus mr-2"></i> Data Roles
+                                          </a>
+                                      </div>
+                                  @endcan
 
                               </div>
                               <div class="card-body">
@@ -36,9 +38,9 @@
                                       <table class="table table-striped" id="tableRoles">
                                           <thead>
                                               <tr>
-                                                  <th>No</th>
+                                                  <th class="table-fit">No</th>
                                                   <th>Nama Role</th>
-                                                  <th>Action</th>
+                                                  <th class="table-fit">Action</th>
                                               </tr>
                                           </thead>
                                           <tbody>
@@ -81,6 +83,7 @@
                               name: 'DT_RowIndex',
                               orderable: false,
                               searchable: false,
+                              class: 'table-fit'
 
                           },
                           {
@@ -90,6 +93,8 @@
                           {
                               data: 'action',
                               name: 'action',
+                              class: 'table-fit'
+
                           },
 
 

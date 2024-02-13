@@ -27,13 +27,13 @@
 
                                 </div> --}}
                             <div class="card-body">
-                                <div class="table-responsive">
+                                {{-- <div class="table-responsive"> --}}
                                     <table class="table table-striped" id="tableUsersTrashed">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
                                                 <th>Nama Lengkap</th>
-                                                <th>Telephone</th>
+                                                <th>Email</th>
                                                 <th>Tanggal Masuk</th>
                                                 <th>Divisi</th>
                                                 <th>Posisi</th>
@@ -49,7 +49,7 @@
                                     </table>
 
 
-                                </div>
+                                {{-- </div> --}}
                             </div>
                         </div>
                     </div>
@@ -65,6 +65,7 @@
                 var tableUsersTrashed = $('#tableUsersTrashed').DataTable({
                     processing: true,
                     serverSide: true,
+                    responsive: true,
                     ajax: {
                         url: "{{ route('user.trashed') }}",
                     },
@@ -75,23 +76,28 @@
                             name: 'DT_RowIndex',
                             orderable: false,
                             searchable: false,
+                            class: 'table-fit'
 
                         },
                         {
                             data: 'full_name',
-                            name: 'full_name'
+                            name: 'full_name',
+                            class: 'table-fit'
                         },
                         {
-                            data: 'telp',
-                            name: 'telp'
+                            data: 'email',
+                            name: 'email',
+                            class: 'table-fit'
                         },
                         {
                             data: 'entry_date',
-                            name: 'entry_date'
+                            name: 'entry_date',
+                            class: 'table-fit'
                         },
                         {
                             data: 'division.name',
                             name: 'division.name',
+                            class: 'table-fit',
                             render: function(data, type, full, meta) {
                                   return data || '<p>-</p>';
                               },
@@ -99,11 +105,13 @@
                         },
                         {
                             data: 'position.name',
-                            name: 'position.name'
+                            name: 'position.name',
+                            class: 'table-fit',
                         },
                         {
                             data: 'manager_name',
                             name: 'manager_name',
+                            class: 'table-fit',
                             render: function(data, type, full, meta) {
                                 return data || '<p>-</p>';
                             },
@@ -111,11 +119,13 @@
                         },
                         {
                             data: 'role.name',
-                            name: 'role.name'
+                            name: 'role.name',
+                            class: 'table-fit'
                         },
                         {
                             data: 'deleted_at',
                             name: 'deleted_at',
+                            class: 'table-fit',
                             render: function(data, type, row) {
                                 let dateReport = new Date(data);
                                 return dateReport.toLocaleDateString(
@@ -134,7 +144,11 @@
                             data: 'action',
                             name: 'action',
                         },
-                    ]
+                    ],
+                    columnDefs: [{
+                          targets: -1,
+                          responsivePriority: 1
+                      }]
 
                 });
             });

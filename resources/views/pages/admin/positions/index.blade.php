@@ -6,7 +6,7 @@
               <div class="section-header">
                   <h1>Positions</h1>
                   <div class="section-header-breadcrumb">
-                      <div class="breadcrumb-item active"><a href="/">Dasboard</a></div>
+                      <div class="breadcrumb-item active"><a href="{{ route('dashboard') }}">Dasboard</a></div>
                       <div class="breadcrumb-item">Positions</div>
                   </div>
               </div>
@@ -19,16 +19,22 @@
                       <div class="col-12">
                           <div class="card">
                               <div class="card-header">
-                                  <a class="btn btn-sm btn-danger float-left text-white" href="{{route('position.trashed')}}"
-                                      id="showDeletedButtonIntern"><i id="showDeletedIcon"
-                                          class="fas fa-trash mr-2 color-white"></i> Lihat Data Terhapus</a>
-                                  <div class="ml-auto">
-                                      <button type="button" class="btn btn-sm btn-primary tombol-create"
-                                          data-placement="top" id="btn-create" data-tooltip-toggle="tooltip"
-                                          title="Tambah Data Positions" data-toggle="modal" data-target="#modalCreatePosisi">
-                                          <i class="fas fa-plus mr-2"></i> Data Positions
-                                      </button>
-                                  </div>
+                                  @can('trashed positions')
+                                      <a class="btn btn-sm btn-danger float-left text-white "
+                                          href="{{ route('position.trashed') }}" id="showDeletedButtonIntern"><i
+                                              id="showDeletedIcon" class="fas fa-trash mr-2 color-white"></i> Trashed</a>
+                                  @endcan
+                                  @can('create positions')
+                                      <div class="ml-auto">
+                                          <button type="button" class="btn btn-sm btn-primary tombol-create"
+                                              data-placement="top" id="btn-create" data-tooltip-toggle="tooltip"
+                                              title="Tambah Data Positions" data-toggle="modal"
+                                              data-target="#modalCreatePosisi">
+                                              <i class="fas fa-plus mr-2"></i> Data Positions
+                                          </button>
+                                      </div>
+                                  @endcan
+
 
                               </div>
                               <div class="card-body">
@@ -36,10 +42,10 @@
                                       <table class="table table-striped" id="tablePositions">
                                           <thead>
                                               <tr>
-                                                  <th>No</th>
+                                                  <th class="table-fit">No</th>
                                                   <th>Nama Divisi</th>
                                                   <th>Level</th>
-                                                  <th>Action</th>
+                                                  <th class="table-fit">Action</th>
                                               </tr>
                                           </thead>
                                           <tbody>
@@ -77,11 +83,21 @@
                       ajax: {
                           url: "{{ route('positions.index') }}"
                       },
+                      //   dom: `<"row align-items-center datatables-header"
+            //         <"col-md-6 mb-1 mb-md-0 datatables-header-left"l>
+            //         <"col-md-6 text-center text-md-right"f>
+            //         >
+            //         rt
+            //     <"row align-items-center datatables-footer"
+            //         <"col-sm-12 col-md-8"i>
+            //         <"col-sm-12 col-md-4 text-right"p>
+            //     >`,
                       columns: [{
                               data: 'DT_RowIndex',
                               name: 'DT_RowIndex',
                               orderable: false,
                               searchable: false,
+                              class: 'table-fit'
 
                           },
                           {
@@ -95,10 +111,14 @@
                           {
                               data: 'action',
                               name: 'action',
+                              class: 'table-fit'
                           },
 
 
-                      ]
+                      ],
+                      //   initComplete: function(){
+                      //     $('.datatables-header-left').append($('.btn-trash').clone().removeClass('d-none'));
+                      //   }
                   });
               });
           </script>

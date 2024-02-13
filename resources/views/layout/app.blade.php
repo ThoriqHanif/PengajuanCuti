@@ -16,36 +16,34 @@
     <link rel="stylesheet" href="{{ asset('assets/modules/prism/prism.css') }}">
 
     <!-- CSS Libraries -->
+    {{-- <link rel="stylesheet" href="{{ asset('assets/modules/fullcalendar/fullcalendar.min.css')}}"> --}}
+
     <link rel="stylesheet" href="{{ asset('assets/modules/jquery-selectric/selectric.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/modules/bootstrap-daterangepicker/daterangepicker.css') }}">
-
+    <link rel="stylesheet" href="{{ asset('assets/modules/bootstrap-timepicker/css/bootstrap-timepicker.min.css')}}">
     <link rel="stylesheet" href="{{ asset('assets/modules/bootstrap-tagsinput/dist/bootstrap-tagsinput.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/modules/jqvmap/dist/jqvmap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/modules/weather-icon/css/weather-icons.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/modules/weather-icon/css/weather-icons-wind.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/modules/summernote/summernote-bs4.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/modules/datatables/datatables.min.css') }}">
-    <link rel="stylesheet"
-        href="{{ asset('assets/modules/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css') }}">
-    {{-- <link rel="stylesheet" href="{{ asset('assets/modules/datatables/Select-1.2.4/css/select.bootstrap4.min.css') }}"> --}}
+    <link rel="stylesheet" href="{{ asset('assets/modules/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css') }}">
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
 
 
     <!-- Template CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/components.css') }}">
     <!-- Start GA -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-94034622-3"></script>
     <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-
-        gtag('config', 'UA-94034622-3');
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+    
+      gtag('config', 'UA-94034622-3');
     </script>
     <!-- /END GA -->
 </head>
@@ -82,6 +80,7 @@
     <script src="{{ asset('assets/modules/summernote/summernote-bs4.js') }}"></script>
     <script src="{{ asset('assets/modules/chocolat/dist/js/jquery.chocolat.min.js') }}"></script>
     <!-- JS Libraies -->
+
     <script src="{{ asset('assets/modules/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js') }}"></script>
     <script src="{{ asset('assets/modules/sweetalert/sweetalert.min.js') }}"></script>
     <script src="{{ asset('assets/modules/datatables/datatables.min.js') }}"></script>
@@ -95,6 +94,8 @@
     <script src="{{ asset('assets/modules/jquery-selectric/jquery.selectric.min.js')}}"></script>
     {{-- <script src="{{ asset('assets/modules/datatables/Select-1.2.4/js/dataTables.select.min.js') }}"></script> --}}
     <script src="{{ asset('assets/modules/jquery-ui/jquery-ui.min.js') }}"></script>
+    {{-- <script src="{{ asset('assets/modules/fullcalendar/fullcalendar.min.js')}}"></script> --}}
+    <script src="{{ asset('assets/modules/upload-preview/assets/js/jquery.uploadPreview.min.js')}}"></script>
 
     <!-- Page Specific JS File -->
 
@@ -106,7 +107,7 @@
     <script src="{{ asset('assets/js/page/bootstrap-modal.js') }}"></script>
     {{-- <script src="{{ asset('assets/js/page/forms-advanced-forms.js')}}"></script> --}}
 
-    {{-- <script src="{{ asset('assets/js/page/features-post-create.js')}}"></script> --}}
+    <script src="{{ asset('assets/js/page/features-post-create.js')}}"></script>
 
 
     @stack('script-divisions')
@@ -116,6 +117,14 @@
     @stack('script-roles')
     @stack('script-users')
     @stack('script-users-trashed')
+    @stack('script-types')
+    @stack('script-types-trashed')
+    @stack('script-leaves')
+    @stack('script-leaves-trashed')
+    @stack('script-request')
+    @stack('script-request-trashed')
+
+    @stack('script-dashboard')
 
 
 

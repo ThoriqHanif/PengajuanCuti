@@ -370,4 +370,37 @@ class PermissionsFactory extends Factory
         });
     }
 
+    public function listTypesPermission()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'name' => 'Melihat Tipe Cuti',
+                'menu_name' => 'Types',
+                'method' => 'index'
+            ];
+        });
+    }
+
+    public function createTypesPermission()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'name' => 'Membuat Tipe Cuti',
+                'menu_name' => 'Types',
+                'method' => 'create'
+            ];
+        });
+    }
+
+    public function showTypesPermission()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'name' => 'Melihat Tipe Cuti',
+                'menu_name' => 'Types',
+                'method' => 'index'
+            ];
+        });
+    }
+
 }

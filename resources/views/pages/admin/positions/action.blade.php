@@ -1,43 +1,54 @@
 @if (!$positions->trashed())
-    <a class="btn btn-sm bg-primary text-white font-weight-bold text-xs detail-posisi" data-toggle="tooltip"
-        data-placement="top" title="Detail Posisi" data-positions-id="{{ $positions->id }}">
-        <i class="fas fa-eye"></i>
-    </a>
+    @can('show positions')
+        <a class="btn btn-sm bg-primary text-white font-weight-bold text-xs detail-posisi" data-toggle="tooltip"
+            data-placement="top" title="Detail Posisi" data-positions-id="{{ $positions->id }}">
+            <i class="fas fa-eye"></i>
+        </a>
+    @endcan
 
-    <a class="btn btn-sm bg-warning text-white font-weight-bold text-xs edit-posisi" data-placement="top"
-        title="Edit Posisi" data-positions-id="{{ $positions->id }}">
-        <i class="fas fa-edit"></i>
-    </a>
 
-    <form style="display: inline" action="{{ route('positions.destroy', $positions->id) }}" method="POST">
-        @csrf
-        @method('DELETE')
-        <button type="submit" class="btn btn-sm btn-danger delete-button" data-toggle="tooltip" data-placement="top"
-            title="Hapus Posisi">
-            <i class="fas fa-trash"></i>
-        </button>
-    </form>
+    @can('edit positions')
+        <a class="btn btn-sm bg-warning text-white font-weight-bold text-xs edit-posisi" data-placement="top"
+            title="Edit Posisi" data-positions-id="{{ $positions->id }}">
+            <i class="fas fa-edit"></i>
+        </a>
+    @endcan
+
+    @can('delete positions')
+        <form style="display: inline" action="{{ route('positions.destroy', $positions->id) }}" method="POST">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-sm btn-danger delete-button" data-toggle="tooltip" data-placement="top"
+                title="Hapus Posisi">
+                <i class="fas fa-trash"></i>
+            </button>
+        </form>
+    @endcan
 @endif
 
 @if ($positions->trashed())
-    <form style="display: inline" action="{{ route('position.restore', $positions->id) }}" method="POST"
-        id="restoreFormPositions">
-        @csrf
-        <button type="submit" class="btn btn-sm btn-info restore-button-positions" data-toggle="tooltip"
-            data-placement="top" title="Restore Posisi">
-            <i class="fas fa-undo"></i>
-        </button>
+    @can('restore positions')
+        <form style="display: inline" action="{{ route('position.restore', $positions->id) }}" method="POST"
+            id="restoreFormPositions">
+            @csrf
+            <button type="submit" class="btn btn-sm btn-info restore-button-positions" data-toggle="tooltip"
+                data-placement="top" title="Restore Posisi">
+                <i class="fas fa-undo"></i>
+            </button>
 
-    </form>
-    <form style="display: inline" action="{{ route('position.forceDelete', $positions->id) }}" method="POST"
-        id="forceDeleteFormPositions">
-        @csrf
-        @method('DELETE')
-        <button type="submit" class="btn btn-sm btn-danger delete-button-positions" data-toggle="tooltip"
-            data-placement="top" title="Hapus Permanen Posisi">
-            <i class="fas fa-trash"></i>
-        </button>
-    </form>
+        </form>
+    @endcan
+    @can('force-delete positions')
+        <form style="display: inline" action="{{ route('position.forceDelete', $positions->id) }}" method="POST"
+            id="forceDeleteFormPositions">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-sm btn-danger delete-button-positions" data-toggle="tooltip"
+                data-placement="top" title="Hapus Permanen Posisi">
+                <i class="fas fa-trash"></i>
+            </button>
+        </form>
+    @endcan
 @endif
 
 

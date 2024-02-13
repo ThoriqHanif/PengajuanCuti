@@ -6,6 +6,7 @@ use App\Http\Requests\StoreUsersRequest;
 use App\Mail\CreateUsers;
 use App\Models\Divisions;
 use App\Models\Positions;
+use App\Models\Role;
 use App\Models\Roles;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -14,6 +15,18 @@ use Yajra\DataTables\Facades\DataTables;
 
 class UsersController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware("permission:index users", ['only' => ['index']]);
+        $this->middleware("permission:show users", ['only' => ['show']]);
+        $this->middleware("permission:create users", ['only' => ['create', 'store']]);
+        $this->middleware("permission:edit users", ['only' => ['edit', 'update']]);
+        $this->middleware("permission:delete users", ['only' => ['destroy']]);
+        $this->middleware("permission:trashed users", ['only' => ['trashed']]);
+        $this->middleware("permission:restore users", ['only' => ['restore']]);
+        $this->middleware("permission:force-delete users", ['only' => ['forceDelete']]);
+    }
     /**
      * Display a listing of the resource.
      */
@@ -63,6 +76,21 @@ class UsersController extends Controller
         return response()->json($topManagers);
     }
 
+    public function getCOO(Request $request)
+    {
+        $divisionId = $request->get('division_id');
+
+        // Gantilah logika ini dengan cara Anda untuk mendapatkan daftar COO berdasarkan divisi
+        $coos = User::with('position')->whereHas('position', function ($query) {
+            $query->where('level', 2);
+        })->whereHas('division', function ($query) use ($divisionId) {
+            $query->where('id', $divisionId);
+        })->get();
+
+
+        return response()->json($coos);
+    }
+
     // public function getManagers(Request $request)
     // {
     //     $divisionId = $request->input('division_id');
@@ -97,6 +125,46 @@ class UsersController extends Controller
     /**
      * Show the form for creating a new resource.
      */
+    public function getPositionLevel(Request $request)
+    {
+        $positionId = $request->input('position_id');
+        $positionLevel = Positions::where('id', $positionId)->value('level');
+
+        return response()->json($positionLevel);
+    }
+
+
+    public function fetchAtasan(Request $request)
+    {
+        $positionId = $request->input('position_id');
+        $divisionId = $request->input('division_id');
+
+        $positionLevel = Positions::where('id', $positionId)->value('level');
+
+        $managers = User::where('position_id', $positionLevel - 1)
+            ->where('division_id', $divisionId)
+            ->get();
+
+        return response()->json($managers);
+
+    }
+
+    public function getCooId(Request $request)
+    {
+        $managerId = $request->input('manager_id');
+
+        $manager = User::find($managerId);
+
+        if (!$manager) {
+            return response()->json(['error' => 'Manager not found'], 404);
+        }
+
+        $cooId = $manager->manager_id;
+
+        return response()->json(['coo_id' => $cooId]);
+    }
+
+
     public function create()
     {
         $users = User::all();
@@ -105,7 +173,7 @@ class UsersController extends Controller
         $managers = User::whereHas('position', function ($query) {
             $query->where('name', '!=', 'Staff');
         })->get();
-        $roles = Roles::all();
+        $roles = Role::all();
 
 
 
@@ -127,11 +195,22 @@ class UsersController extends Controller
         $users->password = bcrypt($request->input('password'));
         $users->division_id = $request->input('division_id');
         $users->manager_id = $request->input('manager_id');
+        $users->coo_id = $request->input('coo_id');
         $users->position_id = $request->input('position_id');
         $users->role_id = $request->input('role_id');
 
-
         if ($users->save()) {
+            // $users->assignRole(
+            //     Role::find($request->role_id)
+            // );
+            $role_id = $request->input('role_id');
+            $role = Role::find($role_id);
+            if ($role) {
+                $users->assignRole(
+                    $role
+                );
+            }
+
             Mail::to($users->email)->send(new CreateUsers($users));
 
             return response()->json(['success' => true]);
@@ -149,12 +228,15 @@ class UsersController extends Controller
         $divisions = Divisions::all();
         $positions = Positions::all();
         $managers = User::whereHas('position', function ($query) {
-            $query->where('name', '!=', 'Staff');
+            $query->where('level', '!=', '4');
         })->get();
-        $roles = Roles::all();
+        $coos = User::whereHas('position', function ($query) {
+            $query->where('level', 2);
+        })->get();
+        $roles = Role::all();
+        // dd($users->can('index divisions'));
 
-
-        return view('pages.admin.users.show', compact('users', 'divisions', 'positions', 'managers', 'roles'));
+        return view('pages.admin.users.show', compact('users', 'divisions', 'positions', 'managers', 'roles', 'coos'));
     }
 
     /**
@@ -162,16 +244,38 @@ class UsersController extends Controller
      */
     public function edit(User $users, string $id)
     {
+
         $users = User::find($id);
         $divisions = Divisions::all();
         $positions = Positions::all();
-        $roles = Roles::all();
+        $roles = Role::all();
         $managers = User::whereHas('position', function ($query) {
             $query->where('name', '!=', 'Staff');
         })->get();
+        $coos = User::whereHas('position', function ($query) {
+            $query->where('level', '2');
+        })->get();
 
-        return view('pages.admin.users.update', compact('users', 'divisions', 'positions', 'managers', 'roles'));
+        return view('pages.admin.users.update', compact('users', 'divisions', 'positions', 'managers', 'roles', 'coos'));
     }
+
+    // UserController.php
+
+    public function getManagersByDivisionAndLevel1(Request $request)
+    {
+        $divisionId = $request->input('division_id');
+
+        // Ambil manager dari divisi dengan level 1
+        $managers = User::with('position')->whereHas('position', function ($query) {
+            $query->where('level', 1);
+        })->whereHas('division', function ($query) use ($divisionId) {
+            $query->where('id', $divisionId);
+        })->get();
+
+        return response()->json($managers);
+    }
+
+
 
     // Jika user yang diedit bukan direktur, maka ambil manajer sesuai divisi
     // if ($users->position->level != 1) {
@@ -203,10 +307,14 @@ class UsersController extends Controller
             'division_id' => $request->input('division_id'),
             'position_id' => $request->input('position_id'),
             'manager_id' => $request->input('manager_id'),
+            'coo_id' => $request->input('coo_id'),
             'role_id' => $request->input('role_id'),
             'email' => $request->input('email'),
-
         ]);
+        $users->syncRoles(
+            Role::find($request->role_id)
+        );
+
 
         if ($users->save()) {
             return response()->json(['success' => true]);

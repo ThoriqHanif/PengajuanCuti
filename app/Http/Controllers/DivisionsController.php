@@ -10,6 +10,17 @@ use Yajra\DataTables\Facades\DataTables;
 
 class DivisionsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware("permission:index divisions", ['only' => ['index']]);
+        $this->middleware("permission:show divisions", ['only' => ['show']]);
+        $this->middleware("permission:create divisions", ['only' => ['create', 'store']]);
+        $this->middleware("permission:edit divisions", ['only' => ['edit', 'update']]);
+        $this->middleware("permission:delete divisions", ['only' => ['destroy']]);
+        $this->middleware("permission:trashed divisions", ['only' => ['trashed']]);
+        $this->middleware("permission:restore divisions", ['only' => ['restore']]);
+        $this->middleware("permission:force-delete divisions", ['only' => ['forceDelete']]);
+    }
     /**
      * Display a listing of the resource.
      */
@@ -27,6 +38,8 @@ class DivisionsController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
+
+        // dd(auth()->user()->roles()->first()->permissions->pluck('id'));
 
         return view('pages.admin.divisions.index');
     }

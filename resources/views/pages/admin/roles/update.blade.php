@@ -7,11 +7,11 @@
                 <div class="section-header-back">
                     <a href="{{ route('roles.index') }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
                 </div>
-                <h1>Edit Role {{ $roles->name }}</h1>
+                <h1>Edit Role</h1>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="/">Dashboard</a></div>
                     <div class="breadcrumb-item"><a href="{{ route('roles.index') }}">Roles</a></div>
-                    <div class="breadcrumb-item">Edit Role {{ $roles->name }}</div>
+                    <div class="breadcrumb-item">Edit Role</div>
                 </div>
             </div>
 
@@ -76,11 +76,11 @@
                                     <div class="custom-switches-stacked mt-4">
                                         @foreach ($menuPermissions as $permission)
                                             <label class="custom-switch">
-                                                <input type="checkbox" name="permissions[]" value="{{ $permission->id }}"
+                                                <input type="checkbox" name="permissions[]" value="{{ $permission->name }}"
                                                     class="custom-switch-input"
                                                     {{ in_array($permission->id, $roles->permissions->pluck('id')->toArray()) ? 'checked' : '' }}>
                                                 <span class="custom-switch-indicator"></span>
-                                                <span class="custom-switch-description">{{ $permission->name }}</span>
+                                                <span class="custom-switch-description">{{ $permission->alias }}</span>
                                             </label>
                                         @endforeach
                                     </div>
