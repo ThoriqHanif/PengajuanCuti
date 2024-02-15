@@ -18,24 +18,27 @@
                   <div class="row">
                       <div class="col-12">
                           <div class="card">
-                              <div class="card-header">
-                                  @can('trashed users')
-                                      <a class="btn btn-sm btn-danger float-left text-white" href="{{ route('user.trashed') }}"
-                                          id="showDeletedButtonIntern"><i id="showDeletedIcon"
-                                              class="fas fa-trash mr-2 color-white"></i> Data Terhapus</a>
-                                  @endcan
-                                  @can('create users')
-                                      <div class="ml-auto">
-                                          <a href="{{ route('users.create') }}" class="btn btn-sm btn-primary tombol-create"
-                                              data-placement="top" id="btn-create" data-toggle="tooltip"
-                                              title="Tambah Data User">
-                                              <i class="fas fa-plus mr-2"></i> Data User
-                                          </a>
-                                      </div>
-                                  @endcan
+                              @canany('trashed users', 'create users')
+                                  <div class="card-header">
+                                      @can('trashed users')
+                                          <a class="btn btn-sm btn-danger float-left text-white" href="{{ route('user.trashed') }}"
+                                              id="showDeletedButtonIntern"><i id="showDeletedIcon"
+                                                  class="fas fa-trash mr-2 color-white"></i> Data Terhapus</a>
+                                      @endcan
+                                      @can('create users')
+                                          <div class="ml-auto">
+                                              <a href="{{ route('users.create') }}" class="btn btn-sm btn-primary tombol-create"
+                                                  data-placement="top" id="btn-create" data-toggle="tooltip"
+                                                  title="Tambah Data User">
+                                                  <i class="fas fa-plus mr-2"></i> Data User
+                                              </a>
+                                          </div>
+                                      @endcan
 
 
-                              </div>
+                                  </div>
+                              @endcanany
+
                               <div class="card-body">
                                   {{-- <div class="table-responsive"> --}}
                                   <table class="table table-striped table-sm" id="tableUsers">
@@ -104,7 +107,7 @@
                               data: 'email',
                               name: 'email'
                           },
-                          
+
                           {
                               data: 'division.name',
                               name: 'division.name',

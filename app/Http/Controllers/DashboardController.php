@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Leave;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,13 +29,33 @@ class DashboardController extends Controller
 
         $user_id = Auth::id();
         $userId = auth()->user()->id;
+        $userLevel = $user->position->level;
 
 
 
-        // dd($events);
+        $atasanId = User::where('manager_id', $user->id)->orWhere('coo_id', $user->id)->pluck('id');
 
+        $totalReview = Leave::whereIn('user_id', $atasanId)
+            ->where('status_manager', '1')
+            ->where('status_coo', '1')
+            ->count();
 
+        $totalPending = Leave::whereIn('user_id', $atasanId)
+            ->where('status_manager', '0')
+            ->where('status_coo', '0')
+            ->count();
 
+        $totalSetuju = Leave::whereIn('user_id', $atasanId)
+            ->where('status_manager', '2')
+            ->where('status_coo', '2')
+            ->count();
+
+        $totalTolak = Leave::whereIn('user_id', $atasanId)
+            ->where('status_manager', '3')
+            ->where('status_coo', '3')
+            ->count();
+
+        // dd($summary);
         $prosesCuti = Leave::where('user_id', $user_id)
             ->where('status_manager', '1')
             ->where('status_coo', '1')
@@ -72,6 +93,13 @@ class DashboardController extends Controller
             })
             ->get();
 
+        $informasiUpdate = Leave::with(['user', 'type'])
+            ->where('user_id', $userId) 
+            ->where(function ($query) use ($userId) {
+                $query->where('status_manager', 2) 
+                      ->orWhere('status_coo', 2); 
+            })
+            ->get();
 
 
         foreach ($pendingLeaves as $leave) {
@@ -91,7 +119,7 @@ class DashboardController extends Controller
             $photoExtension = null;
         }
 
-        return view('pages.admin.dashboard', compact('prosesCuti', 'pendingCuti', 'approveCuti', 'rejectCuti', 'pendingLeaves', 'photoUrl'));
+        return view('pages.admin.dashboard', compact('informasiUpdate','userLevel', 'prosesCuti', 'pendingCuti', 'approveCuti', 'rejectCuti', 'pendingLeaves', 'photoUrl', 'totalReview', 'totalPending', 'totalSetuju', 'totalTolak'));
     }
 
     private function formatTimeDifference($differenceInMinutes)
