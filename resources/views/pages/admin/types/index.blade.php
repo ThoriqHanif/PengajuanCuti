@@ -46,6 +46,7 @@
                                                   <th>Nama Tipe</th>
                                                   <th>Jumlah Cuti</th>
                                                   <th>Skala</th>
+                                                  <th>Jumlah Hari</th>
                                                   <th>Action</th>
                                               </tr>
                                           </thead>
@@ -109,6 +110,11 @@
                           data: 'time',
                           name: 'time',
                           className: 'text-capitalize'
+                      },
+                      {
+                          data: 'duration_in_days',
+                          name: 'duration_in_days',
+                        //   className: 'text-capitalize'
                       },
                       {
                           data: 'action',

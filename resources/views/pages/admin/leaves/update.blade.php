@@ -145,7 +145,7 @@
                                                             <i class="fas fa-calendar"></i>
                                                         </div>
                                                     </div>
-                                                    <input type="text" class="form-control datepicker" name="start_date"
+                                                    <input type="date" class="form-control " name="start_date"
                                                         id="start_date" value="{{ $leaves->start_date }}">
                                                 </div>
                                             </div>
@@ -159,7 +159,7 @@
                                                             <i class="fas fa-calendar"></i>
                                                         </div>
                                                     </div>
-                                                    <input type="text" class="form-control datepicker" name="end_date"
+                                                    <input type="date" class="form-control " name="end_date"
                                                         id="end_date" value="{{ $leaves->end_date }}">
                                                 </div>
                                             </div>
@@ -230,9 +230,9 @@
                                             <td>{{ \Carbon\Carbon::parse($type->created_at)->format('Y') }}</td>
                                             <td class="text-center">{{ $type->duration }} {{ $type->time }}</td>
                                             <td class="text-center">{{ $cutiTerpakaiPerType[$type->id] ?? 0 }}
-                                                {{ $type->time }}</td>
+                                                Hari</td>
                                             <td class="text-right">{{ $sisaPerType[$type->id] ?? $type->duration }}
-                                                {{ $type->time }}</td>
+                                                Hari</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -255,6 +255,73 @@
             });
         });
     </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Dapatkan elemen input tanggal mulai dan tanggal selesai
+                var startDateInput = document.getElementById('start_date');
+                var endDateInput = document.getElementById('end_date');
+                var durationInput = document.getElementById('duration');
+                var initialStartDate = startDateInput.value;
+                var initialEndDate = endDateInput.value;
+                var initialDuration = durationInput.value;
+    
+    
+                // Parse tanggal hari ini
+                var today = new Date();
+                today.setHours(0, 0, 0, 0); // Atur jam ke tengah malam
+    
+                // Tambahkan event listener pada perubahan input tanggal selesai
+                endDateInput.addEventListener('change', function() {
+                    // Parse tanggal mulai dan tanggal selesai ke dalam objek Date
+                    var startDate = new Date(startDateInput.value);
+                    var endDate = new Date(endDateInput.value);
+    
+                    // Bandingkan tanggal dan lakukan validasi
+                    if (startDate > endDate) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oopss...',
+                            text: 'Tanggal selesai harus setelah tanggal mulai',
+                            confirmButtonText: 'Ok'
+                        });
+    
+                        endDateInput.value = initialEndDate;
+                        durationInput.value = initialDuration;
+                    } else if (endDate < today) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oopss...',
+                            text: 'Tanggal selesai tidak boleh kurang dari tanggal hari Ini',
+                            confirmButtonText: 'Ok'
+                        });
+    
+                        endDateInput.value = initialEndDate;
+                        durationInput.value = initialDuration;
+                    }
+                });
+    
+                // Tambahkan event listener pada perubahan input tanggal mulai
+                startDateInput.addEventListener('change', function() {
+                    // Parse tanggal mulai ke dalam objek Date
+                    var startDate = new Date(startDateInput.value);
+                    console.log(startDate);
+    
+                    // Bandingkan tanggal mulai dengan tanggal hari ini
+                    if (startDate < today) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oopss...',
+                            text: 'Tanggal mulai tidak boleh kurang dari tanggal hari Ini',
+                            confirmButtonText: 'Ok'
+                        });
+    
+                        // startDateInput.value = '';
+                        durationInput.value = initialDuration;
+                        startDateInput.value = initialStartDate;
+                    }
+                });
+            });
+        </script>
 
     <script>
         $(document).ready(function() {
@@ -271,9 +338,63 @@
                 }
             }
 
+            function validateDuration() {
+                var typeId = $('#type_id').val();
+                var duration = $('#duration').val();
+                // var startDate = $('#start_date').val();
+                // var endDate = $('#end_date').val();
+                var startDateInput = document.getElementById('start_date');
+                var endDateInput = document.getElementById('end_date');
+                var durationInput = document.getElementById('duration');
+                var initialStartDate = startDateInput.value;
+                var initialEndDate = endDateInput.value;
+                var initialDuration = durationInput.value;
+
+
+                // Mengecek apakah type_id sudah dipilih
+                if (!typeId) {
+                    return; // Tidak melanjutkan validasi jika type_id belum dipilih
+                }
+
+                var formData = {
+                    type_id: typeId,
+                    duration: duration,
+                    _token: '{{ csrf_token() }}'
+                };
+
+                // Melakukan validasi AJAX jika duration diinputkan
+                $.ajax({
+                    type: 'POST',
+                    url: '/leave/validate',
+                    data: formData,
+                    dataType: 'json',
+                    success: function(data) {
+                        if (data.status === 'success') {
+                            // Validasi berhasil, tidak perlu melakukan apa-apa
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: data.message
+                            });
+                            // Reset nilai duration jika validasi gagal
+                            // $('#duration').val('');
+                            // startDateInput.value = initialStartDate;
+                            // endDateInput.value = initialEndDate;
+                            // durationInput.value = initialDuration;
+
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            }
+
 
             $('#start_date, #end_date').change(function() {
                 calculateDuration();
+                validateDuration();
             });
         });
     </script>
@@ -302,63 +423,7 @@
         });
     </script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Dapatkan elemen input tanggal mulai dan tanggal selesai
-            var startDateInput = document.getElementById('start_date');
-            var endDateInput = document.getElementById('end_date');
 
-            // Parse tanggal hari ini
-            var today = new Date();
-            today.setHours(0, 0, 0, 0); // Atur jam ke tengah malam
-
-            // Tambahkan event listener pada perubahan input tanggal selesai
-            endDateInput.addEventListener('change', function() {
-                // Parse tanggal mulai dan tanggal selesai ke dalam objek Date
-                var startDate = new Date(startDateInput.value);
-                var endDate = new Date(endDateInput.value);
-
-                // Bandingkan tanggal dan lakukan validasi
-                if (startDate > endDate) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oopss...',
-                        text: 'Tanggal selesai harus setelah tanggal mulai',
-                        confirmButtonText: 'Ok'
-                    });
-
-                    endDateInput.value = '';
-                } else if (endDate < today) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oopss...',
-                        text: 'Tanggal selesai tidak boleh kurang dari tanggal hari Ini',
-                        confirmButtonText: 'Ok'
-                    });
-
-                    endDateInput.value = '';
-                }
-            });
-
-            // Tambahkan event listener pada perubahan input tanggal mulai
-            startDateInput.addEventListener('change', function() {
-                // Parse tanggal mulai ke dalam objek Date
-                var startDate = new Date(startDateInput.value);
-
-                // Bandingkan tanggal mulai dengan tanggal hari ini
-                if (startDate < today) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oopss...',
-                        text: 'Tanggal mulai tidak boleh kurang dari tanggal hari Ini',
-                        confirmButtonText: 'Ok'
-                    });
-
-                    startDateInput.value = '';
-                }
-            });
-        });
-    </script>
 
     <script>
         $(document).ready(function() {
@@ -380,7 +445,8 @@
                 // Kirim data ke server menggunakan AJAX
                 $.ajax({
                     type: 'POST',
-                    url: '{{ route('leaves.update', ['leaf' => ':leavesId']) }}'.replace(':leavesId',
+                    url: '{{ route('leaves.update', ['leaf' => ':leavesId']) }}'.replace(
+                        ':leavesId',
                         leavesId),
                     data: new FormData(this),
                     processData: false,

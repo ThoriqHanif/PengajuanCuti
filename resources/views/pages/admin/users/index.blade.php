@@ -37,7 +37,7 @@
 
 
                                   </div>
-                              @endcanany
+                              @endcanany    
 
                               <div class="card-body">
                                   {{-- <div class="table-responsive"> --}}

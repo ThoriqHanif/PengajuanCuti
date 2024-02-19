@@ -307,10 +307,10 @@
                                                     <td class="text-center">{{ $type->duration }} {{ $type->time }}
                                                     </td>
                                                     <td class="text-center">{{ $cutiTerpakaiPerType[$type->id] ?? 0 }}
-                                                        {{ $type->time }}</td>
+                                                        Hari</td>
                                                     <td class="text-right">
                                                         {{ $sisaPerType[$type->id] ?? $type->duration }}
-                                                        {{ $type->time }}</td>
+                                                        Hari</td>
                                                 </tr>
                                             </tbody>
                                         </table>

@@ -36,7 +36,7 @@
 
                             </div>
                             <div class="row mt-3">
-                                <div class="col-md-9 col-lg-9 mt-3">
+                                <div class="col-md-8 col-lg-8 mt-3">
                                     {{-- <hr> --}}
                                     <div class="row py-2 px-3" style="background-color: #d8daf242; border-radius: 10px">
                                         <div class="col-md-4 mt-3">
@@ -92,78 +92,13 @@
                                         <div class="col-md-12">
 
                                             @if ($leaves->user->photo)
-                                                <img alt="image" src="{{ asset('files/photo/' . $leaves->user->photo) }}"
-                                                    class="" width="100" style="border-radius: 10px">
+                                                <img alt="image"
+                                                    src="{{ asset('files/photo/' . $leaves->user->photo) }}" class=""
+                                                    width="100" style="border-radius: 10px">
                                             @else
                                                 <img alt="image" src="{{ asset('assets/img/avatar/avatar-1.png') }}"
                                                     class="" width="100" style="border-radius: 10px">
                                             @endif
-
-                                            {{-- <div class="mt-4">
-                                                <div class="">
-                                                    @php
-                                                    $statusManagerText = '';
-                                                    $textColor = '';
-
-                                                    switch ($leaves->status_manager) {
-                                                        case 0:
-                                                            $statusManagerText = 'Pending';
-                                                            $textColor = 'orange';
-                                                            break;
-                                                        case 1:
-                                                            $statusManagerText = 'Sedang Direview';
-                                                            $textColor = 'blue';
-                                                            break;
-                                                        case 2:
-                                                            $statusManagerText = 'Disetujui';
-                                                            $textColor = 'green';
-                                                            break;
-                                                        case 3:
-                                                            $statusManagerText = 'Ditolak';
-                                                            $textColor = 'red';
-                                                            break;
-                                                        default:
-                                                            $statusManagerText = 'Undefined';
-                                                            $textColor = 'black';
-                                                    }
-                                                @endphp
-                                                </div>
-                                                
-                                                    
-                                                <span class="badge"
-                                                    style="background-color: #a4adf342; border-radius: 10px; color:"></span>
-                                            </div> --}}
-                                            {{-- <div class="mt-1">
-                                                @php
-                                                    $statusManagerText = '';
-                                                    $textColor = '';
-
-                                                    switch ($leaves->status_coo) {
-                                                        case 0:
-                                                            $statusCooText = 'Pending';
-                                                            $textColor = 'orange';
-                                                            break;
-                                                        case 1:
-                                                            $statusCooText = 'Sedang Direview';
-                                                            $textColor = 'blue';
-                                                            break;
-                                                        case 2:
-                                                            $statusCooText = 'Disetujui';
-                                                            $textColor = 'green';
-                                                            break;
-                                                        case 3:
-                                                            $statusCooText = 'Ditolak';
-                                                            $textColor = 'red';
-                                                            break;
-                                                        default:
-                                                            $statusCooText = 'Undefined';
-                                                            $textColor = 'black';
-                                                    }
-                                                @endphp
-
-                                                <span class="badge"
-                                                    style="background-color: #a4adf342; border-radius: 10px; color: {{ $textColor }}">{{ $statusCooText }}</span>
-                                            </div> --}}
                                         </div>
                                     </div>
                                 </div>
@@ -227,19 +162,43 @@
                                                 @elseif ($leaves->status_manager == 1)
                                                     <span class="badge badge-info">Sedang Direview</span>
                                                 @elseif ($leaves->status_manager == 2)
-                                                    <span class="badge badge-success">Disetujui</span>
-                                                    <span
-                                                        class="badge badge-primary">{{ $leaves->manager->full_name }}</span>
-                                                    <span class="badge badge-info">
-                                                        {{ \Carbon\Carbon::parse($leaves->date_manager)->isoFormat('D MMMM Y') }}
-                                                    </span>
+                                                    <div class="row center">
+
+                                                        <div class="col-lg-auto col-md-12 mb-2">
+
+                                                            <span class="badge badge-success">Disetujui</span>
+                                                        </div>
+
+                                                        <div class="col-lg-auto col-md-12 mb-2">
+                                                            <span
+                                                                class="badge badge-primary">{{ $leaves->manager->full_name }}</span>
+
+                                                        </div>
+                                                        <div class="col-lg-auto col-md-12">
+                                                            <span class="badge badge-info">
+                                                                {{ \Carbon\Carbon::parse($leaves->date_manager)->isoFormat('D MMMM Y') }}
+                                                            </span>
+                                                        </div>
+                                                    </div>
                                                 @elseif ($leaves->status_manager == 3)
-                                                    <span class="badge badge-danger">Ditolak</span>
-                                                    <span
-                                                        class="badge badge-primary">{{ $leaves->manager->full_name }}</span>
-                                                    <span class="badge badge-info">
-                                                        {{ \Carbon\Carbon::parse($leaves->date_manager)->isoFormat('D MMMM Y') }}
-                                                    </span>
+                                                    <div class="row">
+
+                                                        <div class="col-lg-12 col-md-12 mb-2">
+
+                                                            <span class="badge badge-danger">Ditolak</span>
+                                                        </div>
+
+                                                        <div class="col-lg-12 col-md-12 mb-2">
+                                                            <span
+                                                                class="badge badge-primary">{{ $leaves->manager->full_name }}</span>
+
+                                                        </div>
+                                                        <div class="col-lg-12 col-md-12">
+                                                            <span class="badge badge-info">
+                                                                {{ \Carbon\Carbon::parse($leaves->date_manager)->isoFormat('D MMMM Y') }}
+                                                            </span>
+                                                        </div>
+                                                    </div>
                                                 @else
                                                     <span style="color: black;">Undefined</span>
                                                 @endif
@@ -255,42 +214,78 @@
                                                 @elseif ($leaves->status_coo == 1)
                                                     <span class="badge badge-info">Sedang Direview</span>
                                                 @elseif ($leaves->status_coo == 2)
-                                                    <span class="badge badge-success">Disetujui</span>
-                                                    <span class="badge badge-primary">{{ $leaves->coo->full_name }}</span>
-                                                    <span class="badge badge-info">
-                                                        {{ \Carbon\Carbon::parse($leaves->date_coo)->isoFormat('D MMMM Y') }}
-                                                    </span>
+                                                    <div class="row center">
+
+                                                        <div class="col-lg-auto col-md-12 mb-2">
+
+                                                            <span class="badge badge-success">Disetujui</span>
+                                                        </div>
+
+                                                        <div class="col-lg-auto col-md-12 mb-2">
+                                                            <span
+                                                                class="badge badge-primary">{{ $leaves->coo->full_name }}</span>
+
+                                                        </div>
+                                                        <div class="col-lg-auto col-md-12">
+                                                            <span class="badge badge-info">
+                                                                {{ \Carbon\Carbon::parse($leaves->date_coo)->isoFormat('D MMMM Y') }}
+                                                            </span>
+                                                        </div>
+                                                    </div>
                                                 @elseif ($leaves->status_coo == 3)
-                                                    <span class="badge badge-danger">Ditolak</span>
-                                                    <span class="badge badge-primary">{{ $leaves->coo->full_name }}</span>
-                                                    <span class="badge badge-info">
-                                                        {{ \Carbon\Carbon::parse($leaves->date_coo)->isoFormat('D MMMM Y') }}
-                                                    </span>
+                                                    <div class="row center">
+
+                                                        <div class="col-lg-auto col-md-12 mb-2">
+
+                                                            <span class="badge badge-danger">Ditolak</span>
+                                                        </div>
+
+                                                        <div class="col-lg-auto col-md-12 mb-2">
+                                                            <span
+                                                                class="badge badge-primary">{{ $leaves->coo->full_name }}</span>
+
+                                                        </div>
+                                                        <div class="col-lg-auto col-md-12">
+                                                            <span class="badge badge-info">
+                                                                {{ \Carbon\Carbon::parse($leaves->date_coo)->isoFormat('D MMMM Y') }}
+                                                            </span>
+                                                        </div>
+                                                    </div>
                                                 @else
                                                     <span style="color: black;">Undefined</span>
                                                 @endif
                                             </div>
                                         </div>
 
-
-                                        <div class="text-md-right mt-4 mb-2">
-                                            <input type="text" name="action" id="action" class="d-none">
-                                            <div class="float-lg-left mb-lg-0 mb-3">
-                                                <button class="btn btn-primary btn-icon icon-left action" type="button"
-                                                    name="disetujui" data-request-id="{{ $leaves->id }}">
-                                                    <i class="fas fa-check"></i>
-                                                    Setujui Permohonan
-                                                </button>
-                                                <button class="btn btn-danger btn-icon icon-left action" type="button"
-                                                    name="ditolak" data-request-id="{{ $leaves->id }}">
-                                                    <i class="fas fa-times"></i>
-                                                    Tolak Permohonan
-                                                </button>
+                                        <div class="row mt-3">
+                                            <div class=" mt-4 mb-2 col-md-12 col-lg-12">
+                                                <input type="text" name="action" id="action" class="d-none">
+                                                <div class="row">
+                                                    <div class="col-lg-auto col-md-auto mb-3">
+                                                        <button class="btn btn-primary btn-icon icon-left action" type="button"
+                                                        name="disetujui" data-request-id="{{ $leaves->id }}">
+                                                        <i class="fas fa-check"></i>
+                                                        Setujui Permohonan
+                                                    </button>
+                                                    </div>
+                                                    <div class="col-lg-auto col-md-auto mb-3">
+                                                        <button class="btn btn-danger btn-icon icon-left action" type="button"
+                                                        name="ditolak" data-request-id="{{ $leaves->id }}">
+                                                        <i class="fas fa-times"></i>
+                                                        Tolak Permohonan
+                                                    </button>
+                                                    </div>
+                                                </div>
+                                                {{-- <div class="float-lg-left mb-lg-0 mb-3">
+                                                   
+                                                    
+                                                </div> --}}
+                                                {{-- <button class="btn btn-warning btn-icon icon-left"><i
+                                                        class="fas fa-print"></i>
+                                                    Print</button> --}}
                                             </div>
-                                            {{-- <button class="btn btn-warning btn-icon icon-left"><i
-                                                    class="fas fa-print"></i>
-                                                Print</button> --}}
                                         </div>
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -322,10 +317,10 @@
                                                     <td class="text-center">{{ $type->duration }} {{ $type->time }}
                                                     </td>
                                                     <td class="text-center">{{ $cutiTerpakaiPerType[$type->id] ?? 0 }}
-                                                        {{ $type->time }}</td>
+                                                        Hari</td>
                                                     <td class="text-right">
                                                         {{ $sisaPerType[$type->id] ?? $type->duration }}
-                                                        {{ $type->time }}</td>
+                                                        Hari</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -336,7 +331,7 @@
                         </div>
                     </div>
                     <hr>
-                {{-- </form> --}}
+                    {{-- </form> --}}
             </div>
     </div>
     </section>
@@ -615,5 +610,4 @@
             });
         });
     </script> --}}
-    
 @endsection

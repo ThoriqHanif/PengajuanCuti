@@ -94,10 +94,10 @@ class DashboardController extends Controller
             ->get();
 
         $informasiUpdate = Leave::with(['user', 'type'])
-            ->where('user_id', $userId) 
+            ->where('user_id', $userId)
             ->where(function ($query) use ($userId) {
-                $query->where('status_manager', 2) 
-                      ->orWhere('status_coo', 2); 
+                $query->where('status_manager', 2)
+                    ->orWhere('status_coo', 2);
             })
             ->get();
 
@@ -119,7 +119,7 @@ class DashboardController extends Controller
             $photoExtension = null;
         }
 
-        return view('pages.admin.dashboard', compact('informasiUpdate','userLevel', 'prosesCuti', 'pendingCuti', 'approveCuti', 'rejectCuti', 'pendingLeaves', 'photoUrl', 'totalReview', 'totalPending', 'totalSetuju', 'totalTolak'));
+        return view('pages.admin.dashboard', compact('informasiUpdate', 'userLevel', 'prosesCuti', 'pendingCuti', 'approveCuti', 'rejectCuti', 'pendingLeaves', 'photoUrl', 'totalReview', 'totalPending', 'totalSetuju', 'totalTolak'));
     }
 
     private function formatTimeDifference($differenceInMinutes)
@@ -145,6 +145,8 @@ class DashboardController extends Controller
         if ($userLevel == 4) {
             $events = Leave::with(['user', 'type'])
                 ->where('user_id', $userId)->get();
+        } elseif ($userLevel == 1) {
+            $events = Leave::with(['user', 'type'])->get();
         } else {
             $events = Leave::with(['user', 'type'])
                 ->where('user_id', $userId)

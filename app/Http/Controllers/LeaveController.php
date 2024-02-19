@@ -83,7 +83,7 @@ class LeaveController extends Controller
         $duration = $request->input('duration');
 
         // Menghitung sisa cuti
-        $sisaCuti = Type::find($type_id)->duration - Leave::where('user_id', $user_id)
+        $sisaCuti = Type::find($type_id)->duration_in_days - Leave::where('user_id', $user_id)
             ->where('status_manager', 2)
             ->where('status_coo', 2)
             ->where('type_id', $type_id)
@@ -123,7 +123,7 @@ class LeaveController extends Controller
         foreach ($types as $type) {
 
             // Menambahkan durasi jenis cuti ke totalDurasi
-            $totalDurasi += $type->duration;
+            $totalDurasi += $type->duration_in_days;
 
             $cutiTerpakai = Leave::where('user_id', $user_id)
                 ->where('status_manager', 2)
@@ -139,7 +139,7 @@ class LeaveController extends Controller
         foreach ($types as $type) {
 
             // Menghitung sisa cuti untuk jenis cuti saat ini
-            $sisa = $type->duration - ($cutiTerpakaiPerType[$type->id] ?? 0);
+            $sisa = $type->duration_in_days - ($cutiTerpakaiPerType[$type->id] ?? 0);
             $sisaPerType[$type->id] = $sisa;
         }
 
@@ -231,7 +231,7 @@ class LeaveController extends Controller
         foreach ($types as $type) {
 
             // Menambahkan durasi jenis cuti ke totalDurasi
-            $totalDurasi += $type->duration;
+            $totalDurasi += $type->duration_in_days;
 
             $cutiTerpakai = Leave::where('user_id', $user_id)
                 ->where('status_manager', 2)
@@ -247,7 +247,7 @@ class LeaveController extends Controller
         foreach ($types as $type) {
 
             // Menghitung sisa cuti untuk jenis cuti saat ini
-            $sisa = $type->duration - ($cutiTerpakaiPerType[$type->id] ?? 0);
+            $sisa = $type->duration_in_days - ($cutiTerpakaiPerType[$type->id] ?? 0);
             $sisaPerType[$type->id] = $sisa;
         }
 
@@ -295,7 +295,7 @@ class LeaveController extends Controller
         foreach ($types as $type) {
 
             // Menambahkan durasi jenis cuti ke totalDurasi
-            $totalDurasi += $type->duration;
+            $totalDurasi += $type->duration_in_days;
 
             $cutiTerpakai = Leave::where('user_id', $user_id)
                 ->where('status_manager', 2)
@@ -311,7 +311,7 @@ class LeaveController extends Controller
         foreach ($types as $type) {
 
             // Menghitung sisa cuti untuk jenis cuti saat ini
-            $sisa = $type->duration - ($cutiTerpakaiPerType[$type->id] ?? 0);
+            $sisa = $type->duration_in_days - ($cutiTerpakaiPerType[$type->id] ?? 0);
             $sisaPerType[$type->id] = $sisa;
         }
 

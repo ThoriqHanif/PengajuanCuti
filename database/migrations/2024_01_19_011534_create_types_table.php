@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->integer('duration');
             $table->string('time');
+            $table->integer('duration_in_days')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

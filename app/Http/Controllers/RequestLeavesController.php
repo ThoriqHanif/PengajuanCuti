@@ -91,7 +91,7 @@ class RequestLeavesController extends Controller
         foreach ($types as $type) {
 
             // Menambahkan durasi jenis cuti ke totalDurasi
-            $totalDurasi += $type->duration;
+            $totalDurasi += $type->duration_in_days;
 
             $cutiTerpakai = Leave::where('user_id', $user_id)
                 ->where('status_manager', 2)
@@ -107,7 +107,7 @@ class RequestLeavesController extends Controller
         foreach ($types as $type) {
 
             // Menghitung sisa cuti untuk jenis cuti saat ini
-            $sisa = $type->duration - ($cutiTerpakaiPerType[$type->id] ?? 0);
+            $sisa = $type->duration_in_days - ($cutiTerpakaiPerType[$type->id] ?? 0);
             $sisaPerType[$type->id] = $sisa;
         }
 
@@ -153,7 +153,7 @@ class RequestLeavesController extends Controller
         foreach ($types as $type) {
 
             // Menambahkan durasi jenis cuti ke totalDurasi
-            $totalDurasi += $type->duration;
+            $totalDurasi += $type->duration_in_days;
 
             $cutiTerpakai = Leave::where('user_id', $user_id)
                 ->where('status_manager', 2)
@@ -169,7 +169,7 @@ class RequestLeavesController extends Controller
         foreach ($types as $type) {
 
             // Menghitung sisa cuti untuk jenis cuti saat ini
-            $sisa = $type->duration - ($cutiTerpakaiPerType[$type->id] ?? 0);
+            $sisa = $type->duration_in_days - ($cutiTerpakaiPerType[$type->id] ?? 0);
             $sisaPerType[$type->id] = $sisa;
         }
         if ($userLevel == 3 && $leaves->status_manager == 0) {

@@ -147,14 +147,14 @@
                         <i class="far fa-user"></i> Profile
                     </a>
                 @endcan
-                <a href="features-activities.html" class="dropdown-item has-icon">
+                {{-- <a href="features-activities.html" class="dropdown-item has-icon">
                     <i class="fas fa-bolt"></i> Activities
                 </a>
                 <a href="features-settings.html" class="dropdown-item has-icon">
                     <i class="fas fa-cog"></i> Settings
-                </a>
+                </a> --}}
                 <div class="dropdown-divider"></div>
-                <form id="logout-form" action="{{ url('logout') }}" method="POST" ">
+                <form id="logout-form" action="{{ url('logout') }}" method="POST">
             @csrf
             <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="dropdown-item has-icon text-danger">
               <i class="fas fa-sign-out-alt" ></i> Logout

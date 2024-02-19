@@ -226,9 +226,9 @@
                                             <td>{{ \Carbon\Carbon::parse($type->created_at)->format('Y') }}</td>
                                             <td class="text-center">{{ $type->duration }} {{ $type->time }}</td>
                                             <td class="text-center">{{ $cutiTerpakaiPerType[$type->id] ?? 0 }}
-                                                {{ $type->time }}</td>
-                                            <td class="text-right">{{ $sisaPerType[$type->id] ?? $type->duration }}
-                                                {{ $type->time }}</td>
+                                                Hari</td>
+                                            <td class="text-right">{{ $sisaPerType[$type->id] ?? $type->duration_in_days }}
+                                                Hari</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -326,6 +326,10 @@
             // Dapatkan elemen input tanggal mulai dan tanggal selesai
             var startDateInput = document.getElementById('start_date');
             var endDateInput = document.getElementById('end_date');
+            var durationInput = document.getElementById('duration');
+            var initialStartDate = startDateInput.value;
+            var initialEndDate = endDateInput.value;
+            var initialDuration = durationInput.value;
 
             // Parse tanggal hari ini
             var today = new Date();
@@ -346,7 +350,7 @@
                         confirmButtonText: 'Ok'
                     });
 
-                    endDateInput.value = '';
+                    endDateInput.value = initialEndDate;
                 } else if (endDate < today) {
                     Swal.fire({
                         icon: 'error',
@@ -355,7 +359,7 @@
                         confirmButtonText: 'Ok'
                     });
 
-                    endDateInput.value = '';
+                    endDateInput.value = initialEndDate;
                 }
             });
 
@@ -373,7 +377,7 @@
                         confirmButtonText: 'Ok'
                     });
 
-                    startDateInput.value = '';
+                    startDateInput.value = initialStartDate;
                 }
             });
         });

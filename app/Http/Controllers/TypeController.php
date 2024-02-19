@@ -12,16 +12,16 @@ class TypeController extends Controller
 {
 
     public function __construct()
-     {
-         $this->middleware("permission:index types", ['only' => ['index']]);
-         $this->middleware("permission:show types", ['only' => ['show']]);
-         $this->middleware("permission:create types", ['only' => ['create', 'store']]);
-         $this->middleware("permission:edit types", ['only' => ['edit', 'update']]);
-         $this->middleware("permission:delete types", ['only' => ['destroy']]);
-         $this->middleware("permission:trashed types", ['only' => ['trashed']]);
-         $this->middleware("permission:restore types", ['only' => ['restore']]);
-         $this->middleware("permission:force-delete types", ['only' => ['forceDelete']]);
-     }
+    {
+        $this->middleware("permission:index types", ['only' => ['index']]);
+        $this->middleware("permission:show types", ['only' => ['show']]);
+        $this->middleware("permission:create types", ['only' => ['create', 'store']]);
+        $this->middleware("permission:edit types", ['only' => ['edit', 'update']]);
+        $this->middleware("permission:delete types", ['only' => ['destroy']]);
+        $this->middleware("permission:trashed types", ['only' => ['trashed']]);
+        $this->middleware("permission:restore types", ['only' => ['restore']]);
+        $this->middleware("permission:force-delete types", ['only' => ['forceDelete']]);
+    }
     /**
      * Display a listing of the resource.
      */
@@ -60,11 +60,32 @@ class TypeController extends Controller
         $types->name = $request->name;
         $types->duration = $request->duration;
         $types->time = $request->time;
+        $types->duration_in_days = $this->convertDurationToDays($request->duration, $request->time);
+
 
         if ($types->save()) {
             return response()->json(['success' => true]);
         } else {
             return response()->json(['success' => false]);
+        }
+    }
+
+    public function convertDurationToDays($duration, $time)
+    {
+        switch ($time) {
+            case 'hari':
+                return $duration;
+                break;
+            case 'minggu':
+                return $duration * 7;
+                break;
+            case 'bulan':
+                // Anda bisa menggunakan Carbon untuk melakukan konversi bulan ke jumlah hari
+                return now()->addMonths($duration)->diffInDays();
+                break;
+            default:
+                return 0;
+                break;
         }
     }
 
