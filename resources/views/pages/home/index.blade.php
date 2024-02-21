@@ -58,7 +58,7 @@
             <div class="col-md-6 text-md-start text-center py-6">
               <h1 class="mb-4 fs-9 fw-bold">Ajukan Cutimu Sekarang!</h1>
               <p class="mb-6 lead text-secondary">Pencatatan, Pelacakan dan Saldo Cuti<br class="d-none d-xl-block" />dalam satu sistem yang simpel! Mudahkan karyawanmu sebagai pengguna selanjutnya.</p>
-              <div class="text-center text-md-start"><a class="btn btn-primary me-3 btn-lg" href="#!" role="button">Get started</a></div>
+              <div class="text-center text-md-start"><a class="btn btn-primary me-3 btn-lg" href="{{ route('login') }}" role="button">Get started</a></div>
             </div>
             <div class="col-md-6 text-end"><img class="pt-7 pt-md-0 img-fluid" src="{{ asset('landingpage/public/assets/img/hero/hero1.png') }}" alt="" /></div>
           </div>
