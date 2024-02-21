@@ -41,11 +41,12 @@
                                               <th>Kode Cuti</th>
                                               <th>Nama</th>
                                               <th>Tipe</th>
-                                              <th>Tanggal Pengajuan</th>
                                               <th>Tanggal Mulai</th>
                                               <th>Tanggal Selesai</th>
                                               <th>Status Manager</th>
                                               <th>Status COO</th>
+                                              <th>Tanggal Pengajuan</th>
+
                                               <th>Lama</th>
                                               <th>Alasan</th>
                                               <th>Action</th>
@@ -109,21 +110,7 @@
                               name: 'type.name',
                               class: 'table-fit'
                           },
-                          {
-                              data: 'created_at',
-                              name: 'created_at',
-                              class: 'table-fit',
-                              render: function(data, type, row) {
-                                  // Konversi format tanggal ke bahasa Indonesia
-                                  let startDate = new Date(data);
-                                  return startDate.toLocaleDateString('id-ID', {
-                                      weekday: 'long',
-                                      year: 'numeric',
-                                      month: 'long',
-                                      day: 'numeric'
-                                  });
-                              }
-                          },
+                          
                           {
                               data: 'start_date',
                               name: 'start_date',
@@ -193,6 +180,21 @@
                                   }
 
                                   return data;
+                              }
+                          },
+                          {
+                              data: 'created_at',
+                              name: 'created_at',
+                              class: 'table-fit',
+                              render: function(data, type, row) {
+                                  // Konversi format tanggal ke bahasa Indonesia
+                                  let startDate = new Date(data);
+                                  return startDate.toLocaleDateString('id-ID', {
+                                      weekday: 'long',
+                                      year: 'numeric',
+                                      month: 'long',
+                                      day: 'numeric'
+                                  });
                               }
                           },
                           {

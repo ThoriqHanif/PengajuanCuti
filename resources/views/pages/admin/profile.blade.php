@@ -30,16 +30,16 @@
 
                                 <div class="profile-widget-items">
                                     <div class="profile-widget-item">
-                                        <div class="profile-widget-item-label">Posts</div>
-                                        <div class="profile-widget-item-value">187</div>
+                                        <div class="profile-widget-item-label">Level</div>
+                                        <div class="profile-widget-item-value">{{ $user->position->level }}</div>
                                     </div>
+                                    {{-- <div class="profile-widget-item">
+                                        <div class="profile-widget-item-label">Posisi</div>
+                                        <div class="profile-widget-item-value"><div>
+                                    </div> --}}
                                     <div class="profile-widget-item">
-                                        <div class="profile-widget-item-label">Followers</div>
-                                        <div class="profile-widget-item-value">6,8K</div>
-                                    </div>
-                                    <div class="profile-widget-item">
-                                        <div class="profile-widget-item-label">Following</div>
-                                        <div class="profile-widget-item-value">2,1K</div>
+                                        <div class="profile-widget-item-label">Divisi</div>
+                                        <div class="profile-widget-item-value">{{ $user->division->name }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -49,12 +49,12 @@
                                         <div class="slash"></div> {{ $user->position->name }}
                                     </div>
                                 </div>
-                                Ujang maman is a superhero name in <b>Indonesia</b>, especially in my family. He is not a
+                                {{-- Ujang maman is a superhero name in <b>Indonesia</b>, especially in my family. He is not a
                                 fictional character but an original hero in my family, a hero for his children and for his
                                 wife. So, I use the name as a user in this template. Not a tribute, I'm just bored with
-                                <b>'John Doe'</b>.
+                                <b>'John Doe'</b>. --}}
                             </div>
-                            <div class="card-footer text-center">
+                            {{-- <div class="card-footer text-center">
                                 <div class="font-weight-bold mb-2">Follow Ujang On</div>
                                 <a href="#" class="btn btn-social-icon btn-facebook mr-1">
                                     <i class="fab fa-facebook-f"></i>
@@ -68,7 +68,7 @@
                                 <a href="#" class="btn btn-social-icon btn-instagram">
                                     <i class="fab fa-instagram"></i>
                                 </a>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                     <div class="col-12 col-md-12 col-lg-7">
