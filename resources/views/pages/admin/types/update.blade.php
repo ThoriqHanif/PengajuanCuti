@@ -32,7 +32,7 @@
                         </div>
                         <div class="form-group col-md-6">
                             <label for="time">Skala dalam 1 Tahun</label>
-                            <div class="input-group">
+                            <div class="form-group">
                                 <select class="form-control selectric" name="time" id="time_edit">
                                     <option value="" selected @readonly(true)>Pilih Skala</option>
                                     <option value="hari">Hari</option>
@@ -41,6 +41,7 @@
                                 </select>
                             </div>
                         </div>
+                        {{-- <input type="number" id="duration_in_days_edit" name="duration_in_days"> --}}
 
                     </div>
             </div>

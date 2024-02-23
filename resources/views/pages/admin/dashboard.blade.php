@@ -69,6 +69,70 @@
                         </div>
                     </div>
                 </div>
+                
+            @elseif ($userLevel == 1)
+                <div class="row">
+                    <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                        <div class="card card-statistic-1">
+                            <div class="card-icon bg-primary">
+                                <i class="far fa-user"></i>
+                            </div>
+                            <div class="card-wrap">
+                                <div class="card-header">
+                                    <h4>Pengajuan Direview</h4>
+                                </div>
+                                <div class="card-body">
+                                    {{ $totalReview1 }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                        <div class="card card-statistic-1">
+                            <div class="card-icon bg-success">
+                                <i class="fas fa-check-double"></i>
+                            </div>
+                            <div class="card-wrap">
+                                <div class="card-header">
+                                    <h4>Pengajuan Disetujui</h4>
+                                </div>
+                                <div class="card-body">
+                                    {{ $totalSetuju1 }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                        <div class="card card-statistic-1">
+                            <div class="card-icon bg-warning">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="card-wrap">
+                                <div class="card-header">
+                                    <h4>Pengajuan Pending</h4>
+                                </div>
+                                <div class="card-body">
+                                    {{ $totalPending1 }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                        <div class="card card-statistic-1">
+                            <div class="card-icon bg-danger">
+                                <i class="fas fa-times"></i>
+                            </div>
+                            <div class="card-wrap">
+                                <div class="card-header">
+                                    <h4>Pengajuan Ditolak</h4>
+                                </div>
+                                <div class="card-body">
+                                    {{ $totalTolak1 }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             @else
                 <div class="row">
                     <div class="col-lg-3 col-md-6 col-sm-6 col-12">
@@ -164,7 +228,8 @@
                                                         src="{{ asset('files/photo/' . $leave->user->photo) }}"
                                                         class="mr-3 rounded-circle" width="50">
                                                 @else
-                                                    <img alt="image" src="{{ asset('assets/img/avatar/avatar-1.png') }}"
+                                                    <img alt="image"
+                                                        src="{{ asset('assets/img/avatar/avatar-1.png') }}"
                                                         class="mr-3 rounded-circle" width="50">
                                                 @endif
                                                 <div class="media-body">
@@ -195,7 +260,8 @@
                                     @endforeach
                                 </ul>
                                 <div class="text-center pt-1 pb-1">
-                                    <a href="{{ route('request-leave.index') }}" class="btn btn-primary btn-lg btn-round">
+                                    <a href="{{ route('request-leave.index') }}"
+                                        class="btn btn-primary btn-lg btn-round">
                                         View All
                                     </a>
                                 </div>
@@ -217,16 +283,21 @@
                                                 <div class="media-body">
                                                     <div class="float-right text-white">
                                                         @if ($info->status_coo == 0)
-                                                            <a href="{{ route('leaves.show', $info->slug) }}" class="badge badge-warning">Pending</a>
+                                                            <a href="{{ route('leaves.show', $info->slug) }}"
+                                                                class="badge badge-warning">Pending</a>
                                                         @elseif ($info->status_coo == 1)
-                                                            <a href="{{ route('leaves.show', $info->slug) }}" class="badge badge-primary">Direview</a>
+                                                            <a href="{{ route('leaves.show', $info->slug) }}"
+                                                                class="badge badge-primary">Direview</a>
                                                         @elseif ($info->status_coo == 2)
-                                                            <a href="{{ route('leaves.show', $info->slug) }}" class="badge badge-success">Disetujui</a>
+                                                            <a href="{{ route('leaves.show', $info->slug) }}"
+                                                                class="badge badge-success">Disetujui</a>
                                                         @elseif ($leave->status_coo == 3)
-                                                            <a href="{{ route('leaves.show', $info->slug) }}" class="badge badge-danger">Ditolak</a>
+                                                            <a href="{{ route('leaves.show', $info->slug) }}"
+                                                                class="badge badge-danger">Ditolak</a>
                                                         @endif
                                                     </div>
-                                                    <a class="media-title" href="{{ route('leaves.show', $info->slug) }}">{{ $info->type->name }}</a>
+                                                    <a class="media-title"
+                                                        href="{{ route('leaves.show', $info->slug) }}">{{ $info->type->name }}</a>
                                                     <div class="text-small text-danger mb-1 mt-1">
                                                         @php
                                                             // \Carbon\Carbon::setLocale('id');

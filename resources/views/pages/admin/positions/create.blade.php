@@ -10,20 +10,36 @@
             <div class="modal-body">
                 <form action="{{ route('positions.store') }}" method="post" id="formPositions">
                     @csrf
-                    <div class="form-group">
-                        <label>Nama Posisi</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="eg. Direktur" name="name"
-                                id="name">
+                    <div class="row">
+                        <div class="col-lg-8"><div class="form-group">
+                            <label>Nama Posisi</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="eg. Direktur" name="name"
+                                    id="name">
+                            </div>
                         </div>
+                        <small class="text-danger">*Level tertinggi 1</small>
                     </div>
-                    <div class="form-group">
-                        <label>Level Posisi</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="eg. 1" name="level"
-                                id="level">
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label>Level Posisi</label>
+                                <div class="input-group">
+                                    <select name="level" id="level" class="form-control selectric">
+                                        <option >Pilih Level</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                    </select>
+                                    {{-- <input type="text" class="form-control" placeholder="eg. 1" name="level"
+                                        id="level"> --}}
+                                </div>
+                            </div>
                         </div>
+
                     </div>
+                    
+                   
             </div>
             <div class="modal-footer bg-whitesmoke br">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>

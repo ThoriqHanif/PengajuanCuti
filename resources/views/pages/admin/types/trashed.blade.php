@@ -5,9 +5,9 @@
         <section class="section">
             <div class="section-header">
                 <div class="section-header-back">
-                    <a href="{{route('types.index')}}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
-                  </div>
-                  <h1>Tipe Terhapus</h1>
+                    <a href="{{ route('types.index') }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
+                </div>
+                <h1>Tipe Terhapus</h1>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item "><a href="/">Dasboard</a></div>
                     <div class="breadcrumb-item "><a href="{{ route('types.index') }}">Types</a></div>
@@ -34,6 +34,7 @@
                                                 <th>Nama Divisi</th>
                                                 <th>Jumlah Cuti</th>
                                                 <th>Skala</th>
+                                                <th>Total Hari</th>
                                                 <th>Tanggal Dihapus</th>
                                                 <th>Action</th>
                                             </tr>
@@ -82,7 +83,16 @@
                         },
                         {
                             data: 'time',
-                            name: 'time'
+                            name: 'time',
+                            class: 'text-capitalize'
+                        },
+                        {
+                            data: 'duration_in_days',
+                            name: 'duration_in_days',
+                            render: function(data, type, row, meta) {
+                                return data + ' Hari';
+                            }
+
                         },
                         {
                             data: 'deleted_at',

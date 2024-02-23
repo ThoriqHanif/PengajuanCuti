@@ -98,6 +98,7 @@ class PositionsController extends Controller
 
         $positions->update([
             'name' => $request->input('name'),
+            'level' => $request->input('level')
         ]);
 
         // Simpan perubahan 

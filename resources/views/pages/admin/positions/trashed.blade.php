@@ -32,6 +32,7 @@
                                             <tr>
                                                 <th>No</th>
                                                 <th>Nama Divisi</th>
+                                                <th>Level</th>
                                                 <th>Tanggal dihapus</th>
                                                 <th>Action</th>
                                             </tr>
@@ -73,6 +74,10 @@
                         {
                             data: 'name',
                             name: 'name'
+                        },
+                        {
+                            data: 'level',
+                            name: 'level',
                         },
                         {
                             data: 'deleted_at',

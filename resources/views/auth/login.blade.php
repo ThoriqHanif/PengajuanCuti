@@ -124,7 +124,7 @@
                             Copyright &copy;
                             <script>
                                 document.write(new Date().getFullYear())
-                            </script> <a class="text-primary">CutiKita</a>
+                            </script> <a class="text-primary" href="{{ url('/') }}">CutiKita</a>
                         </div>
                     </div>
                 </div>

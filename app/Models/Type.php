@@ -16,7 +16,8 @@ class Type extends Model
     [
         'name',
         'duration',
-        'time'
+        'time',
+        'duration_in_days',
     ];
 
     public function leave()

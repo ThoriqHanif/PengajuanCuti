@@ -4,15 +4,15 @@
       <div class="main-content">
           <section class="section">
               <div class="section-header">
-                  <h1>Types</h1>
+                  <h1>Tipe</h1>
                   <div class="section-header-breadcrumb">
-                      <div class="breadcrumb-item active"><a href="{{ route('dashboard') }}">Dasboard</a></div>
-                      <div class="breadcrumb-item">Types</div>
+                      <div class="breadcrumb-item active"><a href="{{ route('dashboard') }}">Dashboard</a></div>
+                      <div class="breadcrumb-item">Tipe</div>
                   </div>
               </div>
 
               <div class="section-body">
-                  <h2 class="section-title">Tipe Cuti</h2>
+                  <h2 class="section-title">Daftar Tipe Cuti</h2>
 
 
                   <div class="row">
@@ -114,7 +114,11 @@
                       {
                           data: 'duration_in_days',
                           name: 'duration_in_days',
-                        //   className: 'text-capitalize'
+                          render: function(data, type, row, meta) {
+                                return data + ' Hari';
+                            }
+
+                          //   className: 'text-capitalize'
                       },
                       {
                           data: 'action',
@@ -219,8 +223,9 @@
                           $('#id').val(response.result.id);
                           $('#name_detail').val(response.result.name);
                           $('#duration_detail').val(response.result.duration);
+                        //   $('#duration_in_days_detail').val(response.result.duration_in_days);
                           $('#time_detail').val(response.result.time);
-                          $('#time_detail').selectric('refresh');
+                          //   $('#time_detail').selectric('refresh');
 
                       },
                       error: function(xhr) {
@@ -252,6 +257,7 @@
                           $('#name_edit').val(response.result.name);
                           $('#duration_edit').val(response.result.duration);
                           $('#time_edit').val(response.result.time);
+                        //   $('#duration_in_days_edit').val(response.result.duration_in_days);
                           $('#time_edit').selectric('refresh');
 
                       },
@@ -261,6 +267,7 @@
                   });
               });
           });
+          
 
           $(document).on('click', '.btn-update', function(e) {
 
@@ -276,6 +283,7 @@
                       name: $('#name_edit').val(),
                       duration: $('#duration_edit').val(),
                       time: $('#time_edit').val(),
+                    //   duration_in_days: $('#duration_in_days_edit').val(),
 
                   },
                   success: function(response) {

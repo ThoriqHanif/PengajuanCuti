@@ -89,7 +89,12 @@ Route::resource('divisions', DivisionsController::class);
 
 
     Route::resource('request-leave', RequestLeavesController::class);
-    // Route::post('request-leave/{id}', [RequestLeavesController::class, 'update'])->name('request-leave.update');
+
+    Route::middleware('check.manager.status')->group(function () {
+        Route::get('request-leave/{request_leave}/edit', [RequestLeavesController::class, 'edit'])->name('request-leave.edit');
+        Route::put('request-leave/{request_leave}', [RequestLeavesController::class, 'update'])->name('request-leave.update');
+    });
+        // Route::post('request-leave/{id}', [RequestLeavesController::class, 'update'])->name('request-leave.update');
 
     // Route::get('/detail/leaves/{id}', [LeaveController::class, 'show'])->name('detail.leaves.show');
     // Route::post('/leave/restore/{id}', [LeaveController::class, 'restore'])->name('leave.restore');

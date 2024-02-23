@@ -1,3 +1,5 @@
+@can('edit request-leave')
+    
 @if (auth()->user()->position->level == 3)
     @if ($leaves->status_manager == 0)
         <a class="btn btn-sm bg-primary text-white font-weight-bold text-xs detail-user" data-toggle="tooltip"
@@ -79,6 +81,11 @@
             data-placement="top" title="Detail & Review" data-leaves-id="{{ $leaves->id }}">
             <i class="fas fa-clock mr-2"></i> Menunggu Review {{ $leaves->user->manager->position->name }}
         </a>
+        <a class="btn btn-sm bg-primary text-white font-weight-bold text-xs" data-toggle="tooltip"
+        data-placement="top" title="Sedang Direview COO" data-leaves-id="{{ $leaves->id }}"
+        href="{{ route('request-leave.show', $leaves->id) }}">
+        <i class="fas fa-eye"></i>
+    </a>
     @elseif($leaves->status_manager == 1)
         <a class="btn btn-sm bg-info text-white font-weight-bold text-xs detail-user" data-toggle="tooltip"
             data-placement="top" title="Detail & Review" data-leaves-id="{{ $leaves->id }}">
@@ -140,3 +147,4 @@
         </a>
     @endif
 @endif
+@endcan

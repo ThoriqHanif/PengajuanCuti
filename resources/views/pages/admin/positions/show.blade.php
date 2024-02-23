@@ -8,13 +8,30 @@
                 </button>
             </div>
             <div class="modal-body">
-                    <div class="form-group">
-                        <label>Nama Posisi</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="eg. Staff" name="name"
-                                id="name_detail" readonly>
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="form-group">
+                            <label>Nama Posisi</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="eg. Staff" name="name"
+                                    id="name_detail" readonly>
+                            </div>
                         </div>
                     </div>
+                    <div class="col-lg-3">
+                        <div class="form-group">
+                            <label>Level Posisi</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" placeholder="eg. Staff" name="level"
+                                    id="level_detail" readonly>
+                                
+                                {{-- <input type="text" class="form-control" placeholder="eg. 1" name="level"
+                                    id="level"> --}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    
             </div>
             <div class="modal-footer bg-whitesmoke br">
                 {{-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button> --}}

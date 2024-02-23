@@ -4,10 +4,10 @@
       <div class="main-content">
           <section class="section">
               <div class="section-header">
-                  <h1>Leaves</h1>
+                  <h1>Pengajuan</h1>
                   <div class="section-header-breadcrumb">
-                      <div class="breadcrumb-item active"><a href="{{ route('dashboard') }}">Dasboard</a></div>
-                      <div class="breadcrumb-item">Leaves</div>
+                      <div class="breadcrumb-item active"><a href="{{ route('dashboard') }}">Dashboard</a></div>
+                      <div class="breadcrumb-item">Pengajuan</div>
                   </div>
               </div>
 
@@ -45,6 +45,7 @@
                                               <th>Tanggal Selesai</th>
                                               <th>Status Manager</th>
                                               <th>Status COO</th>
+
                                               <th>Tanggal Pengajuan</th>
 
                                               <th>Lama</th>
@@ -182,22 +183,7 @@
                                   return data;
                               }
                           },
-                          {
-                              data: 'created_at',
-                              name: 'created_at',
-                              class: 'table-fit',
-                              render: function(data, type, row) {
-                                  // Konversi format tanggal ke bahasa Indonesia
-                                  let startDate = new Date(data);
-                                  return startDate.toLocaleDateString('id-ID', {
-                                      weekday: 'long',
-                                      year: 'numeric',
-                                      month: 'long',
-                                      day: 'numeric'
-                                  });
-                              }
-                          },
-                          {
+                            {
                               data: 'status_coo',
                               name: 'status_coo',
                               class: 'table-fit',
@@ -236,6 +222,22 @@
                                   return data;
                               }
                           },
+                          {
+                              data: 'created_at',
+                              name: 'created_at',
+                              class: 'table-fit',
+                              render: function(data, type, row) {
+                                  // Konversi format tanggal ke bahasa Indonesia
+                                  let startDate = new Date(data);
+                                  return startDate.toLocaleDateString('id-ID', {
+                                      weekday: 'long',
+                                      year: 'numeric',
+                                      month: 'long',
+                                      day: 'numeric'
+                                  });
+                              }
+                          },
+                        
                           {
                               data: 'duration',
                               name: 'duration',

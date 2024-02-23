@@ -32,6 +32,22 @@ class DashboardController extends Controller
         $userLevel = $user->position->level;
 
 
+        $totalReview1 = Leave::where('status_manager', '1')
+            ->where('status_coo', '1')
+            ->count();
+
+        $totalPending1 = Leave::where('status_manager', '0')
+            ->where('status_coo', '0')
+            ->count();
+
+        $totalSetuju1 = Leave::where('status_manager', '2')
+            ->where('status_coo', '2')
+            ->count();
+
+        $totalTolak1 = Leave::where('status_manager', '3')
+            ->where('status_coo', '3')
+            ->count();
+            
 
         $atasanId = User::where('manager_id', $user->id)->orWhere('coo_id', $user->id)->pluck('id');
 
@@ -119,7 +135,7 @@ class DashboardController extends Controller
             $photoExtension = null;
         }
 
-        return view('pages.admin.dashboard', compact('informasiUpdate', 'userLevel', 'prosesCuti', 'pendingCuti', 'approveCuti', 'rejectCuti', 'pendingLeaves', 'photoUrl', 'totalReview', 'totalPending', 'totalSetuju', 'totalTolak'));
+        return view('pages.admin.dashboard', compact('totalReview1','totalPending1','totalSetuju1','totalTolak1','informasiUpdate', 'userLevel', 'prosesCuti', 'pendingCuti', 'approveCuti', 'rejectCuti', 'pendingLeaves', 'photoUrl', 'totalReview', 'totalPending', 'totalSetuju', 'totalTolak'));
     }
 
     private function formatTimeDifference($differenceInMinutes)

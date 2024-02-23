@@ -11,16 +11,36 @@
                 {{-- <form action="{{ isset($divisions) ? route('divisions.update', $divisions->id) : route('divisions.store') }}" method="post" id="formEditDivisions">
                     @csrf
                     @method('put') --}}
+                <div class="row">
 
-                    <div class="form-group">
-                        <input type="hidden" class="form-control" id="position_id" name="id">
+                    <div class="col-lg-8">
+                        <div class="form-group">
+                            <input type="hidden" class="form-control" id="position_id" name="id">
 
-                        <label>Nama Posisi</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="eg. Staff" name="name"
-                                id="name_edit">
+                            <label>Nama Posisi</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="eg. Staff" name="name"
+                                    id="name_edit">
+                            </div>
                         </div>
                     </div>
+                    <div class="col-lg-3">
+                        <div class="form-group">
+                            <label>Level Posisi</label>
+                            <div class="input-group">
+                                <select name="level" id="level_edit" class="form-control selectric">
+                                    {{-- <option>Pilih Level</option> --}}
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
             <div class="modal-footer bg-whitesmoke br">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>

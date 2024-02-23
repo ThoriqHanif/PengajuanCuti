@@ -81,7 +81,7 @@ class TypeController extends Controller
                 break;
             case 'bulan':
                 // Anda bisa menggunakan Carbon untuk melakukan konversi bulan ke jumlah hari
-                return now()->addMonths($duration)->diffInDays();
+                return $duration * 30; // Anggap 1 bulan = 30 hari
                 break;
             default:
                 return 0;
@@ -115,12 +115,18 @@ class TypeController extends Controller
     public function update(UpdateTypeRequest $request, Type $types, $id)
     {
         $types = Type::find($id);
+        $durationInDays = $this->convertDurationToDays($request->input('duration'), $request->input('time'));
+
 
         $types->update([
             'name' => $request->input('name'),
             'duration' => $request->input('duration'),
             'time' => $request->input('time'),
+            'duration_in_days' => $durationInDays, // Simpan hasil konversi durasi ke dalam jumlah hari
+
         ]);
+
+        // dd($types);
 
         // Simpan perubahan 
         if ($types->save()) {

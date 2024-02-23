@@ -1,10 +1,10 @@
 <div class="main-sidebar sidebar-style-2">
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
-            <a href="index.html">CutiKita</a>
+            <a href="{{ url('/') }}">CutiKita</a>
         </div>
         <div class="sidebar-brand sidebar-brand-sm">
-            <a href="index.html">CK</a>
+            <a href="{{ url('/') }}">CK</a>
         </div>
         <ul class="sidebar-menu">
             <li class="menu-header">Dashboard</li>
@@ -65,26 +65,26 @@
 
             @can('index divisions')
                 <li class="{{ request()->is('divisions*', 'division/trashed') ? 'active' : '' }}">
-                    <a href="{{ route('divisions.index') }}" class="nav-link"><i class="fas fa-list"></i><span>Divisions
-                            Management</span></a>
+                    <a href="{{ route('divisions.index') }}" class="nav-link"><i class="fas fa-list"></i><span> Data Divisi
+                            </span></a>
                 </li>
             @endcan
             @can('index positions')
                 <li class="{{ request()->is('positions*', 'positions/trashed') ? 'active' : '' }}">
                     <a class="nav-link" href="{{ route('positions.index') }}"><i
-                            class="fas fa-briefcase"></i><span>Positions Management</span></a>
+                            class="fas fa-briefcase"></i><span> Data Posisi</span></a>
                 </li>
             @endcan
             @can('index roles')
                 <li class="{{ request()->is('roles*', 'roles/create', 'roles') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('roles.index') }}"><i class="fas fa-filter"></i><span>Roles
-                            Management</span></a>
+                    <a class="nav-link" href="{{ route('roles.index') }}"><i class="fas fa-filter"></i><span> Data
+                            Role</span></a>
                 </li>
             @endcan
             @can('index users')
                 <li class="{{ request()->is('users*', 'users/trashed', 'users/create') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('users.index') }}"><i class="fas fa-users"></i><span>Users
-                            Management</span></a>
+                    <a class="nav-link" href="{{ route('users.index') }}"><i class="fas fa-users"></i><span>
+                            Data User</span></a>
                 </li>
             @endcan
 

@@ -4,15 +4,15 @@
       <div class="main-content">
           <section class="section">
               <div class="section-header">
-                  <h1>Positions</h1>
+                  <h1>Posisi</h1>
                   <div class="section-header-breadcrumb">
-                      <div class="breadcrumb-item active"><a href="{{ route('dashboard') }}">Dasboard</a></div>
-                      <div class="breadcrumb-item">Positions</div>
+                      <div class="breadcrumb-item active"><a href="{{ route('dashboard') }}">Dashboard</a></div>
+                      <div class="breadcrumb-item">Posisi</div>
                   </div>
               </div>
 
               <div class="section-body">
-                  <h2 class="section-title">Positions</h2>
+                  <h2 class="section-title">Daftar Posisi</h2>
 
 
                   <div class="row">
@@ -22,7 +22,7 @@
                                   @can('trashed positions')
                                       <a class="btn btn-sm btn-danger float-left text-white "
                                           href="{{ route('position.trashed') }}" id="showDeletedButtonIntern"><i
-                                              id="showDeletedIcon" class="fas fa-trash mr-2 color-white"></i> Trashed</a>
+                                              id="showDeletedIcon" class="fas fa-trash mr-2 color-white"></i> Data Terhapus</a>
                                   @endcan
                                   @can('create positions')
                                       <div class="ml-auto">
@@ -30,7 +30,7 @@
                                               data-placement="top" id="btn-create" data-tooltip-toggle="tooltip"
                                               title="Tambah Data Positions" data-toggle="modal"
                                               data-target="#modalCreatePosisi">
-                                              <i class="fas fa-plus mr-2"></i> Data Positions
+                                              <i class="fas fa-plus mr-2"></i> Data Posisi
                                           </button>
                                       </div>
                                   @endcan
@@ -215,6 +215,7 @@
                               $('#modalDetailPosisi').modal('show');
                               $('#id').val(response.result.id);
                               $('#name_detail').val(response.result.name);
+                              $('#level_detail').val(response.result.level);
                           },
                           error: function(xhr) {
                               console.log(xhr.responseText);
@@ -241,6 +242,8 @@
                               $('#modalEditPosisi').modal('show');
                               $('#position_id').val(response.result.id);
                               $('#name_edit').val(response.result.name);
+                              $('#level_edit').val(response.result.level);
+                              $('#level_edit').selectric('refresh');
                           },
                           error: function(xhr) {
                               console.log(xhr.responseText);
@@ -258,7 +261,10 @@
                       url: var_url,
                       type: var_type,
                       data: {
+                        "_token": "{{ csrf_token() }}",
+
                           name: $('#name_edit').val(),
+                          level: $('#level_edit').val(),
 
                       },
                       success: function(response) {

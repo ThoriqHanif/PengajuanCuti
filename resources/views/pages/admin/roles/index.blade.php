@@ -4,21 +4,22 @@
       <div class="main-content">
           <section class="section">
               <div class="section-header">
-                  <h1>Roles</h1>
+                  <h1>Role</h1>
                   <div class="section-header-breadcrumb">
-                      <div class="breadcrumb-item active"><a href="{{ route('dashboard') }}">Dasboard</a></div>
-                      <div class="breadcrumb-item">Roles</div>
+                      <div class="breadcrumb-item active"><a href="{{ route('dashboard') }}">Dashboard</a></div>
+                      <div class="breadcrumb-item">Role</div>
                   </div>
               </div>
 
               <div class="section-body">
-                  <h2 class="section-title">Roles</h2>
 
 
                   <div class="row">
                       <div class="col-12">
                           <div class="card">
                               <div class="card-header">
+                  <h2 class="section-title">Daftar Role</h2>
+
                                   {{-- <a class="btn btn-sm btn-danger float-left text-white" href="{{route('role.trashed')}}"
                                       id="showDeletedButtonIntern"><i id="showDeletedIcon"
                                           class="fas fa-trash mr-2 color-white"></i> Lihat Data Terhapus</a> --}}
@@ -27,7 +28,7 @@
                                           <a href="{{ route('roles.create') }}" class="btn btn-sm btn-primary tombol-create"
                                               data-placement="top" id="btn-create" data-toggle="tooltip"
                                               title="Tambah Data Roles">
-                                              <i class="fas fa-plus mr-2"></i> Data Roles
+                                              <i class="fas fa-plus mr-2"></i> Data Role
                                           </a>
                                       </div>
                                   @endcan

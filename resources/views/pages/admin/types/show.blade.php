@@ -26,15 +26,23 @@
                         <div class="form-group col-md-6">
                             <label for="time">Skala dalam 1 Tahun</label>
                             <div class="input-group">
-                                <select class="form-control selectric" name="time" id="time_detail" disabled>
+                                {{-- <select class="form-control selectric" name="time" id="time_detail" disabled>
                                     <option value="" selected @readonly(true)>Pilih Skala</option>
                                     <option value="hari">Hari</option>
                                     <option value="minggu">Minggu</option>
                                     <option value="bulan">Bulan</option>
-                                </select>
+                                </select> --}}
+                                <input type="text" class="form-control text-capitalize" placeholder="eg. 12" name="time"
+                                id="time_detail" readonly>
                             </div>
                         </div>
-
+                        <div class="form-group col-md-6">
+                            <label for="duration">Total Hari</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" placeholder="eg. 12" name="duration_in_days"
+                                    id="duration_in_days_detail" readonly>
+                            </div>
+                        </div>
                     </div>
             </div>
             <div class="modal-footer bg-whitesmoke br">

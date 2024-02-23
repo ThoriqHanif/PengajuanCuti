@@ -4,15 +4,15 @@
       <div class="main-content">
           <section class="section">
               <div class="section-header">
-                  <h1>Divisions</h1>
+                  <h1>Divisi</h1>
                   <div class="section-header-breadcrumb">
-                      <div class="breadcrumb-item active"><a href="{{ route('dashboard') }}">Dasboard</a></div>
-                      <div class="breadcrumb-item">Divisions</div>
+                      <div class="breadcrumb-item active"><a href="{{ route('dashboard') }}">Dashboard</a></div>
+                      <div class="breadcrumb-item">Divisi</div>
                   </div>
               </div>
 
               <div class="section-body">
-                  <h2 class="section-title">Divisions</h2>
+                  <h2 class="section-title">Daftar Divisi</h2>
 
 
                   <div class="row">
@@ -22,7 +22,7 @@
                                   @can('trashed divisions')
                                       <a class="btn btn-sm btn-danger float-left text-white"
                                           href="{{ route('division.trashed') }}" id="showDeletedButtonIntern"><i
-                                              id="showDeletedIcon" class="fas fa-trash mr-2 color-white"></i> Lihat Data
+                                              id="showDeletedIcon" class="fas fa-trash mr-2 color-white"></i> Data
                                           Terhapus</a>
                                   @endcan
 
