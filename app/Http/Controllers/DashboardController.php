@@ -47,7 +47,7 @@ class DashboardController extends Controller
         $totalTolak1 = Leave::where('status_manager', '3')
             ->where('status_coo', '3')
             ->count();
-            
+
 
         $atasanId = User::where('manager_id', $user->id)->orWhere('coo_id', $user->id)->pluck('id');
 
@@ -135,7 +135,7 @@ class DashboardController extends Controller
             $photoExtension = null;
         }
 
-        return view('pages.admin.dashboard', compact('totalReview1','totalPending1','totalSetuju1','totalTolak1','informasiUpdate', 'userLevel', 'prosesCuti', 'pendingCuti', 'approveCuti', 'rejectCuti', 'pendingLeaves', 'photoUrl', 'totalReview', 'totalPending', 'totalSetuju', 'totalTolak'));
+        return view('pages.admin.dashboard', compact('totalReview1', 'totalPending1', 'totalSetuju1', 'totalTolak1', 'informasiUpdate', 'userLevel', 'prosesCuti', 'pendingCuti', 'approveCuti', 'rejectCuti', 'pendingLeaves', 'photoUrl', 'totalReview', 'totalPending', 'totalSetuju', 'totalTolak'));
     }
 
     private function formatTimeDifference($differenceInMinutes)
@@ -160,15 +160,28 @@ class DashboardController extends Controller
 
         if ($userLevel == 4) {
             $events = Leave::with(['user', 'type'])
-                ->where('user_id', $userId)->get();
+                ->where('user_id', $userId)
+                ->where(function ($query) {
+                    $query->where('status_manager', 2)
+                        ->where('status_coo', 2);
+                })
+                ->get();
         } elseif ($userLevel == 1) {
-            $events = Leave::with(['user', 'type'])->get();
+            $events = Leave::with(['user', 'type'])
+                ->where('status_manager', 2)
+                ->where('status_coo', 2)
+                ->get();
+            ;
         } else {
             $events = Leave::with(['user', 'type'])
                 ->where('user_id', $userId)
                 ->orWhere(function ($query) use ($userId) {
                     $query->where('manager_id', $userId)
                         ->orWhere('coo_id', $userId);
+                })
+                ->where(function ($query) {
+                    $query->where('status_manager', 2)
+                          ->where('status_coo', 2);
                 })
                 ->get();
         }

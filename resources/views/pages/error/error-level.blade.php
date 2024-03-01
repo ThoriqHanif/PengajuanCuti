@@ -34,7 +34,7 @@
           <div class="page-inner">
             <h1>Oopss..</h1>
             <div class="page-description">
-            	Anda belum memiliki akses untuk mengubah data ini!
+            	Anda tidak memiliki hak untuk mengakses halaman ini!
             </div>
             <div class="page-search">
               <form>              	
@@ -43,8 +43,8 @@
                 </div>
               </form>
               <div class="mt-3">
-                <a href="javascript:window.history.back()" class="btn btn-primary px-5">Kembali</a>
-
+                <a href="javascript:window.history.back()" class="btn btn-primary px-5">Kembali
+                </a>
               </div>
             </div>
           </div>

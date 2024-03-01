@@ -6,6 +6,7 @@ use App\Http\Controllers\DivisionsController;
 use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\PositionsController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RequestLeavesController;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\TypeController;
@@ -36,10 +37,14 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/calendar', [DashboardController::class, 'calendar'])->name('calendar');
 
-    
-});
 
-Route::resource('divisions', DivisionsController::class);
+    Route::get('profile', [ProfileController::class, 'index'])->name('profile');
+    Route::post('profile', [ProfileController::class, 'update'])->name('profile.update');
+
+    Route::get('reports', [ReportController::class, 'index'])->name('report');
+    Route::get('reports/export/', [ReportController::class, 'exportExcel'])->name('export.report');
+
+    Route::resource('divisions', DivisionsController::class);
     Route::get('/detail/divisions/{id}', [DivisionsController::class, 'show'])->name('detail.divisions.show');
     Route::post('/division/restore/{id}', [DivisionsController::class, 'restore'])->name('division.restore');
     Route::delete('/division/force-delete/{id}', [DivisionsController::class, 'forceDelete'])->name('division.forceDelete');
@@ -63,13 +68,15 @@ Route::resource('divisions', DivisionsController::class);
     Route::delete('/user/force-delete/{id}', [UsersController::class, 'forceDelete'])->name('user.forceDelete');
     Route::get('/user/trashed', [UsersController::class, 'trashed'])->name('user.trashed');
     Route::get('/fetchManager', [UsersController::class, 'fetchAtasan'])->name('user.getManagers');
-    Route::get('/get-position-level', [UsersController::class, 'getPositionLevel'])->name('user.getPositionLevel');    
+    Route::get('/get-position-level', [UsersController::class, 'getPositionLevel'])->name('user.getPositionLevel');
     Route::get('/user/get-coo-id', [UsersController::class, 'getCooId'])->name('user.getCooId');
+    Route::get('/get-top-managers', [UsersController::class, 'getTopManagers'])->name('user.getTopManagers');
+
 
     // Route::get('/getManagers', [UsersController::class, 'getManagers'])->name('user.manager');
-    // Route::get('/user/topManagers', [UsersController::class, 'getTopManagers'])->name('user.topManagers');
-    // Route::get('/user/coo', [UsersController::class, 'getCOO'])->name('user.coo');
-    // Route::get('/user/managersByDivisionAndLevel1', [UsersController::class, 'getManagersByDivisionAndLevel1'])->name('user.managersByDivisionAndLevel1');
+// Route::get('/user/topManagers', [UsersController::class, 'getTopManagers'])->name('user.topManagers');
+// Route::get('/user/coo', [UsersController::class, 'getCOO'])->name('user.coo');
+// Route::get('/user/managersByDivisionAndLevel1', [UsersController::class, 'getManagersByDivisionAndLevel1'])->name('user.managersByDivisionAndLevel1');
 
     Route::resource('types', TypeController::class);
     Route::get('/detail/types/{id}', [TypeController::class, 'show'])->name('detail.types.show');
@@ -89,19 +96,18 @@ Route::resource('divisions', DivisionsController::class);
 
 
     Route::resource('request-leave', RequestLeavesController::class);
+});
 
-    Route::middleware('check.manager.status')->group(function () {
-        Route::get('request-leave/{request_leave}/edit', [RequestLeavesController::class, 'edit'])->name('request-leave.edit');
-        Route::put('request-leave/{request_leave}', [RequestLeavesController::class, 'update'])->name('request-leave.update');
-    });
-        // Route::post('request-leave/{id}', [RequestLeavesController::class, 'update'])->name('request-leave.update');
 
-    // Route::get('/detail/leaves/{id}', [LeaveController::class, 'show'])->name('detail.leaves.show');
-    // Route::post('/leave/restore/{id}', [LeaveController::class, 'restore'])->name('leave.restore');
-    // Route::delete('/leave/force-delete/{id}', [LeaveController::class, 'forceDelete'])->name('leave.forceDelete');
-    // Route::get('/leave/trashed', [LeaveController::class, 'trashed'])->name('leave.trashed');
-    // Route::get('/get-max-duration/{id}', [LeaveController::class, 'getDuration'])->name('leave.duration');
 
-    Route::get('profile', [ProfileController::class, 'index'])->name('profile');
-    Route::post('profile', [ProfileController::class, 'update'])->name('profile.update');
+Route::middleware('check.manager.status')->group(function () {
+    Route::get('request-leave/{request_leave}/edit', [RequestLeavesController::class, 'edit'])->name('request-leave.edit');
+    Route::put('request-leave/{request_leave}', [RequestLeavesController::class, 'update'])->name('request-leave.update');
+});
+// Route::post('request-leave/{id}', [RequestLeavesController::class, 'update'])->name('request-leave.update');
 
+// Route::get('/detail/leaves/{id}', [LeaveController::class, 'show'])->name('detail.leaves.show');
+// Route::post('/leave/restore/{id}', [LeaveController::class, 'restore'])->name('leave.restore');
+// Route::delete('/leave/force-delete/{id}', [LeaveController::class, 'forceDelete'])->name('leave.forceDelete');
+// Route::get('/leave/trashed', [LeaveController::class, 'trashed'])->name('leave.trashed');
+// Route::get('/get-max-duration/{id}', [LeaveController::class, 'getDuration'])->name('leave.duration');

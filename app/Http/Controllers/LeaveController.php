@@ -103,6 +103,8 @@ class LeaveController extends Controller
 
     public function create()
     {
+
+        
         $leaves = Leave::with('type')->get();
 
         $users = User::all();
@@ -119,10 +121,10 @@ class LeaveController extends Controller
         $totalDurasi = 0;
 
         $cutiTerpakaiPerType = [];
+        $cutiSedangDiprosesPerType = [];
 
         foreach ($types as $type) {
 
-            // Menambahkan durasi jenis cuti ke totalDurasi
             $totalDurasi += $type->duration_in_days;
 
             $cutiTerpakai = Leave::where('user_id', $user_id)
@@ -132,18 +134,33 @@ class LeaveController extends Controller
                 ->sum('duration');
 
             $cutiTerpakaiPerType[$type->id] = $cutiTerpakai;
+
+            $sedangDiproses = Leave::where('user_id', $user_id)
+                ->where(function ($query) {
+                    $query->whereNotIn('status_manager', [2, 3])
+                        ->orWhereNotIn('status_coo', [2, 3]);
+                })
+                ->where('type_id', $type->id)
+                ->sum('duration');
+
+            $sedangDiprosesPerType[$type->id] = $sedangDiproses;
+
         }
 
         $sisaPerType = [];
 
         foreach ($types as $type) {
 
-            // Menghitung sisa cuti untuk jenis cuti saat ini
             $sisa = $type->duration_in_days - ($cutiTerpakaiPerType[$type->id] ?? 0);
             $sisaPerType[$type->id] = $sisa;
+
+            $cutiTersedia = $sisa - ($sedangDiprosesPerType[$type->id] ?? 0);
+            $cutiTersediaPerType[$type->id] = $cutiTersedia;
+
+           
         }
 
-        return view('pages.admin.leaves.create', compact('types', 'users', 'positions', 'divisions', 'roles', 'managers', 'cutiTerpakaiPerType', 'sisaPerType', 'totalDurasi'));
+        return view('pages.admin.leaves.create', compact('types', 'users', 'positions', 'divisions', 'roles', 'managers', 'cutiTerpakaiPerType', 'sedangDiprosesPerType', 'cutiTersediaPerType', 'sisaPerType', 'totalDurasi'));
     }
 
 
@@ -154,10 +171,14 @@ class LeaveController extends Controller
     {
         $userLevel = auth()->user()->position->level;
         $user = auth()->user();
+        
 
 
         $statusManager = 0;
         $statusCoo = 0;
+        $managerId = null;
+        $date_manager = null;
+        
 
         if ($userLevel == 4) {
             $statusManager = 0;
@@ -165,7 +186,11 @@ class LeaveController extends Controller
         } elseif ($userLevel == 3) {
             $statusManager = 2;
             $statusCoo = 0;
+            $managerId = $user->id;
+            $date_manager = now();
         }
+
+        // dd($date_manager);
 
         $leaves = new Leave([
             'user_id' => $request->input('user_id'),
@@ -176,10 +201,12 @@ class LeaveController extends Controller
             'reason' => $request->input('reason'),
             'status_manager' => $statusManager,
             'status_coo' => $statusCoo,
+            'manager_id' => $managerId,
+            'date_manager' => $date_manager
         ]);
 
         if ($leaves->save()) {
-            $managerId = $user->manager_id;
+            // $managerId = $user->manager_id;
 
             $cooId = $user->coo_id ?? null;
             $userLevel = $user->position->level;
@@ -224,13 +251,15 @@ class LeaveController extends Controller
 
         $user_id = auth()->user()->id;
 
+
+
         $totalDurasi = 0;
 
         $cutiTerpakaiPerType = [];
+        $cutiSedangDiprosesPerType = [];
 
         foreach ($types as $type) {
 
-            // Menambahkan durasi jenis cuti ke totalDurasi
             $totalDurasi += $type->duration_in_days;
 
             $cutiTerpakai = Leave::where('user_id', $user_id)
@@ -240,18 +269,34 @@ class LeaveController extends Controller
                 ->sum('duration');
 
             $cutiTerpakaiPerType[$type->id] = $cutiTerpakai;
+
+            $sedangDiproses = Leave::where('user_id', $user_id)
+                ->where(function ($query) {
+                    $query->whereNotIn('status_manager', [2, 3])
+                        ->orWhereNotIn('status_coo', [2, 3]);
+                })
+                ->where('type_id', $type->id)
+                ->sum('duration');
+
+            $sedangDiprosesPerType[$type->id] = $sedangDiproses;
+
+
         }
 
         $sisaPerType = [];
 
         foreach ($types as $type) {
 
-            // Menghitung sisa cuti untuk jenis cuti saat ini
             $sisa = $type->duration_in_days - ($cutiTerpakaiPerType[$type->id] ?? 0);
             $sisaPerType[$type->id] = $sisa;
+
+            $cutiTersedia = $sisa - ($sedangDiprosesPerType[$type->id] ?? 0);
+            $cutiTersediaPerType[$type->id] = $cutiTersedia;
+
+           
         }
 
-        return view('pages.admin.leaves.show', compact('leaves', 'types', 'users', 'positions', 'divisions', 'roles', 'managers', 'cutiTerpakaiPerType', 'sisaPerType', 'totalDurasi'));
+        return view('pages.admin.leaves.show', compact('leaves', 'types', 'users', 'positions', 'divisions', 'roles', 'managers', 'cutiTerpakaiPerType', 'sedangDiprosesPerType', 'cutiTersediaPerType', 'sisaPerType', 'totalDurasi'));
     }
 
     public function exportPDF($slug)
@@ -268,6 +313,12 @@ class LeaveController extends Controller
     public function edit(Leave $leave, $slug)
     {
         //
+
+        if (Auth::user()->position->level == 4 && $leave->status_manager !== 0) 
+        {
+            return view('pages.error.error-level'); // Kode status 403 menunjukkan akses ditolak
+
+        }
 
 
         $leaves = Leave::where('slug', $slug)->first();
@@ -286,15 +337,10 @@ class LeaveController extends Controller
         $totalDurasi = 0;
 
         $cutiTerpakaiPerType = [];
-
-
-        // if ($users->leave->status_manager == 1) {
-        //     return redirect()->route('users.index')->with('error', 'Anda tidak dapat mengedit pengajuan ini karena sudah disetujui oleh manager.');
-        // }
+        $cutiSedangDiprosesPerType = [];
 
         foreach ($types as $type) {
 
-            // Menambahkan durasi jenis cuti ke totalDurasi
             $totalDurasi += $type->duration_in_days;
 
             $cutiTerpakai = Leave::where('user_id', $user_id)
@@ -304,18 +350,32 @@ class LeaveController extends Controller
                 ->sum('duration');
 
             $cutiTerpakaiPerType[$type->id] = $cutiTerpakai;
+
+            $sedangDiproses = Leave::where('user_id', $user_id)
+                ->where(function ($query) {
+                    $query->whereNotIn('status_manager', [2, 3])
+                        ->orWhereNotIn('status_coo', [2, 3]);
+                })
+                ->where('type_id', $type->id)
+                ->sum('duration');
+
+            $sedangDiprosesPerType[$type->id] = $sedangDiproses;
+
         }
 
         $sisaPerType = [];
 
         foreach ($types as $type) {
 
-            // Menghitung sisa cuti untuk jenis cuti saat ini
             $sisa = $type->duration_in_days - ($cutiTerpakaiPerType[$type->id] ?? 0);
             $sisaPerType[$type->id] = $sisa;
-        }
 
-        return view('pages.admin.leaves.update', compact('leaves', 'types', 'users', 'positions', 'divisions', 'roles', 'managers', 'cutiTerpakaiPerType', 'sisaPerType', 'totalDurasi'));
+            $cutiTersedia = $sisa - ($sedangDiprosesPerType[$type->id] ?? 0);
+            $cutiTersediaPerType[$type->id] = $cutiTersedia;
+
+           
+        }
+        return view('pages.admin.leaves.update', compact('leaves', 'types', 'users', 'positions', 'divisions', 'roles', 'managers', 'cutiTerpakaiPerType', 'sedangDiprosesPerType', 'cutiTersediaPerType', 'sisaPerType', 'totalDurasi'));
     }
 
     /**
@@ -329,6 +389,7 @@ class LeaveController extends Controller
     }
     public function update(UpdateLeaveRequest $request, $id)
     {
+        
         $leaves = Leave::find($id);
 
         $leaves->update([
@@ -343,6 +404,12 @@ class LeaveController extends Controller
         if ($leaves->save()) {
             return response()->json(['success' => true]);
         }
+
+        if (Auth::user()->position->level == 4 && $leaves->status_manager !== 0) 
+        {
+            return view('pages.error.error-level'); // Kode status 403 menunjukkan akses ditolak
+
+        }
     }
 
     /**
@@ -356,6 +423,12 @@ class LeaveController extends Controller
             return response()->json(['success' => true, 'message' => 'Pengajuan berhasil dihapus.']);
         } else {
             return response()->json(['success' => false, 'message' => 'Gagal menghapus Pengajuan.']);
+        }
+
+        if (Auth::user()->position->level == 4 && $leave->status_manager !== 0) 
+        {
+            return view('pages.error.error-level'); // Kode status 403 menunjukkan akses ditolak
+
         }
     }
 

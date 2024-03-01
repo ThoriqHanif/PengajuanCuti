@@ -70,7 +70,7 @@ class RequestLeavesController extends Controller
     {
         //
         $leaves = Leave::with(['user', 'type'])->findOrFail($id);
-        
+
         $userLevel = auth()->user()->position->level;
 
         $users = User::all();
@@ -87,6 +87,7 @@ class RequestLeavesController extends Controller
         $totalDurasi = 0;
 
         $cutiTerpakaiPerType = [];
+        $cutiSedangDiprosesPerType = [];
 
         foreach ($types as $type) {
 
@@ -100,18 +101,35 @@ class RequestLeavesController extends Controller
                 ->sum('duration');
 
             $cutiTerpakaiPerType[$type->id] = $cutiTerpakai;
+
+            $sedangDiproses = Leave::where('user_id', $user_id)
+                ->where(function ($query) {
+                    $query->whereNotIn('status_manager', [2, 3])
+                        ->orWhereNotIn('status_coo', [2, 3]);
+                })
+                ->where('type_id', $type->id)
+                ->sum('duration');
+
+            $sedangDiprosesPerType[$type->id] = $sedangDiproses;
+
+            // dd($sedangDiprosesPerType);
+
         }
 
         $sisaPerType = [];
 
         foreach ($types as $type) {
 
-            // Menghitung sisa cuti untuk jenis cuti saat ini
             $sisa = $type->duration_in_days - ($cutiTerpakaiPerType[$type->id] ?? 0);
             $sisaPerType[$type->id] = $sisa;
+
+            $cutiTersedia = $sisa - ($sedangDiprosesPerType[$type->id] ?? 0);
+            $cutiTersediaPerType[$type->id] = $cutiTersedia;
+
+           
         }
 
-        return view('pages.admin.request.show', compact('leaves', 'types', 'users', 'positions', 'divisions', 'roles', 'managers', 'cutiTerpakaiPerType', 'sisaPerType', 'totalDurasi'));
+        return view('pages.admin.request.show', compact('leaves', 'types', 'users', 'positions', 'divisions', 'roles', 'managers', 'cutiTerpakaiPerType',  'sedangDiprosesPerType', 'cutiTersediaPerType', 'sisaPerType', 'totalDurasi'));
     }
 
     /**

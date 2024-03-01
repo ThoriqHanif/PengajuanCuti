@@ -197,6 +197,221 @@
         </section>
     </div>
 
+    <script>
+        $(document).ready(function() {
+            var divisionField = $('#divisionField');
+            var atasanField = $('#atasanField');
+            var positionSelect = $('#position_id');
+            var divisionSelect = $('#division_id');
+            var atasanSelect = $('#atasanSelect');
+            var cooIdInput = $('#coo_id');
+
+            positionSelect.change(function() {
+                var selectedPositionId = $(this).val();
+
+                if (selectedPositionId) {
+                    fetchPositionLevel(selectedPositionId);
+                } else {
+                    divisionField.addClass('d-none');
+                    atasanField.addClass('d-none');
+                }
+            });
+
+            divisionSelect.change(function() {
+                var selectedPositionId = positionSelect.val();
+                var selectedDivisionId = $(this).val();
+
+                if (selectedPositionId && selectedPositionId > 1 && selectedDivisionId) {
+                    atasanField.removeClass('d-none');
+                    fetchManagers(selectedPositionId, selectedDivisionId);
+                } else {
+                    atasanField.addClass('d-none');
+                }
+            });
+
+            atasanSelect.change(function() {
+                var selectedManagerId = $(this).val();
+
+                if (selectedManagerId) {
+                    fetchCooId(selectedManagerId);
+                }
+            });
+
+            function fetchPositionLevel(positionId) {
+                $.ajax({
+                    type: 'GET',
+                    url: '{{ route('user.getPositionLevel') }}',
+                    data: {
+                        position_id: positionId
+                    },
+                    success: function(data) {
+                        if (data > 1) {
+                            divisionField.removeClass('d-none');
+                        } else {
+                            divisionField.addClass('d-none');
+                        }
+
+                        divisionSelect.trigger('change');
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        console.error('Error fetching position level:', errorThrown);
+                    }
+                });
+            }
+
+            function fetchManagers(positionId, divisionId) {
+                var requestData = {
+                    position_id: positionId
+                };
+
+                // Cek jika divisionId tidak null
+                if (divisionId) {
+                    requestData['division_id'] = divisionId;
+                }
+
+                // Cek level posisi yang dipilih
+                $.ajax({
+                    type: 'GET',
+                    url: '{{ route('user.getManagers') }}',
+                    data: requestData,
+                    success: function(data) {
+                        // Jika level posisi adalah 2, panggil endpoint untuk mendapatkan atasan level 1
+                        if (positionId === '2') {
+                            $.ajax({
+                                type: 'GET',
+                                url: '{{ route('user.getTopManagers') }}',
+                                success: function(topManagers) {
+                                    populateAtasanOptions(topManagers);
+                                },
+                                error: function(xhr, textStatus, errorThrown) {
+                                    console.error('Error fetching top managers:',
+                                        errorThrown);
+                                }
+                            });
+                        } else {
+                            populateAtasanOptions(data);
+                        }
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        console.error('Error fetching managers:', errorThrown);
+                    }
+                });
+            }
+
+
+            function populateAtasanOptions(data) {
+                atasanSelect.empty().append('<option value="" selected>Pilih Atasan</option>');
+
+                if (data && data.length > 0) {
+                    $.each(data, function(index, manager) {
+                        var positionName = manager.position ? ' (' + manager.position.name + ')' : '';
+                        var optionText = manager.full_name + positionName;
+
+                        atasanSelect.append('<option value="' + manager.id + '">' + optionText +
+                            '</option>');
+                    });
+                }
+
+                atasanSelect.selectric('refresh');
+            }
+
+            function fetchCooId(managerId) {
+                $.ajax({
+                    type: 'GET',
+                    url: '{{ route('user.getCooId') }}',
+                    data: {
+                        manager_id: managerId
+                    },
+                    success: function(data) {
+                        if (data && data.coo_id) {
+                            cooIdInput.val(data.coo_id);
+                        } else {
+                            console.error('COO ID not found for selected manager.');
+                        }
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        console.error('Error fetching COO ID:', errorThrown);
+                    }
+                });
+            }
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $("#formUsers").on("submit", function(e) {
+                e.preventDefault();
+
+                // Tampilkan pesan "loading" saat akan mengirim permintaan AJAX
+                Swal.fire({
+                    title: 'Mohon Tunggu!',
+                    html: 'Sedang memproses data...',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    willOpen: () => {
+                        Swal.showLoading();
+                    },
+                });
+
+                // Kirim data ke server menggunakan AJAX
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('users.store') }}',
+                    data: new FormData(this),
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        // Tutup pesan "loading" saat berhasil
+                        Swal.close();
+
+                        if (response.success) {
+                            // Redirect ke halaman index dengan pesan "success"
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil!',
+                                text: 'Data berhasil disimpan.',
+                            }).then(function() {
+                                // Redirect ke halaman indeks setelah menutup SweetAlert
+                                window.location.href = '{{ route('users.index') }}';
+                            });
+                        } else {
+                            // Jika validasi gagal, tampilkan pesan-pesan kesalahan
+                            if (response.errors) {
+                                var errorMessages = '';
+                                for (var key in response.errors) {
+                                    if (response.errors.hasOwnProperty(key)) {
+                                        errorMessages += response.errors[key][0] + '<br>';
+                                    }
+                                }
+                                Swal.fire('Gagal', errorMessages, 'error');
+                            } else {
+                                Swal.fire('Gagal', 'Terjadi kesalahan saat menyimpan data',
+                                    'error');
+                            }
+                        }
+                    },
+                    error: function(xhr) {
+                        Swal.close();
+                        if (xhr.status === 422) {
+                            // Menampilkan pesan validasi error SweetAlert
+                            var errorMessages = '';
+                            var errors = xhr.responseJSON.errors;
+                            for (var key in errors) {
+                                if (errors.hasOwnProperty(key)) {
+                                    errorMessages += errors[key][0] + '<br>';
+                                }
+                            }
+                            Swal.fire('Gagal', errorMessages, 'error');
+                        } else {
+                            Swal.fire('Gagal', 'Terjadi kesalahan saat simpan data.', 'error');
+                        }
+                    },
+                });
+            });
+        });
+    </script>
+
+
     {{-- FIX JIKA TANPA COO --}}
     {{-- <script>
         $(document).ready(function() {
@@ -289,126 +504,6 @@
             }
         });
     </script> --}}
-
-    <script>
-        $(document).ready(function() {
-            var divisionField = $('#divisionField');
-            var atasanField = $('#atasanField');
-            var positionSelect = $('#position_id');
-            var divisionSelect = $('#division_id');
-            var atasanSelect = $('#atasanSelect');
-            var cooIdInput = $('#coo_id');
-    
-            positionSelect.change(function() {
-                var selectedPositionId = $(this).val();
-    
-                if (selectedPositionId) {
-                    fetchPositionLevel(selectedPositionId);
-                } else {
-                    divisionField.addClass('d-none');
-                    atasanField.addClass('d-none');
-                }
-            });
-    
-            divisionSelect.change(function() {
-                var selectedPositionId = positionSelect.val();
-                var selectedDivisionId = $(this).val();
-    
-                if (selectedPositionId && selectedPositionId > 1 && selectedDivisionId) {
-                    atasanField.removeClass('d-none');
-                    fetchManagers(selectedPositionId, selectedDivisionId);
-                } else {
-                    atasanField.addClass('d-none');
-                }
-            });
-    
-            atasanSelect.change(function() {
-                var selectedManagerId = $(this).val();
-    
-                if (selectedManagerId) {
-                    fetchCooId(selectedManagerId);
-                }
-            });
-    
-            function fetchPositionLevel(positionId) {
-                $.ajax({
-                    type: 'GET',
-                    url: '{{ route('user.getPositionLevel') }}',
-                    data: {
-                        position_id: positionId
-                    },
-                    success: function(data) {
-                        if (data > 1) {
-                            divisionField.removeClass('d-none');
-                        } else {
-                            divisionField.addClass('d-none');
-                        }
-    
-                        divisionSelect.trigger('change');
-                    },
-                    error: function(xhr, textStatus, errorThrown) {
-                        console.error('Error fetching position level:', errorThrown);
-                    }
-                });
-            }
-    
-            function fetchManagers(positionId, divisionId) {
-                $.ajax({
-                    type: 'GET',
-                    url: '{{ route('user.getManagers') }}',
-                    data: {
-                        position_id: positionId,
-                        division_id: divisionId
-                    },
-                    success: function(data) {
-                        populateAtasanOptions(data);
-                    },
-                    error: function(xhr, textStatus, errorThrown) {
-                        console.error('Error fetching managers:', errorThrown);
-                    }
-                });
-            }
-    
-            function populateAtasanOptions(data) {
-                atasanSelect.empty().append('<option value="" selected>Pilih Atasan</option>');
-    
-                if (data && data.length > 0) {
-                    $.each(data, function(index, manager) {
-                        var positionName = manager.position ? ' (' + manager.position.name + ')' : '';
-                        var optionText = manager.full_name + positionName;
-    
-                        atasanSelect.append('<option value="' + manager.id + '">' + optionText +
-                            '</option>');
-                    });
-                }
-    
-                atasanSelect.selectric('refresh');
-            }
-    
-            function fetchCooId(managerId) {
-                $.ajax({
-                    type: 'GET',
-                    url: '{{ route('user.getCooId') }}',
-                    data: {
-                        manager_id: managerId
-                    },
-                    success: function(data) {
-                        if (data && data.coo_id) {
-                            cooIdInput.val(data.coo_id);
-                        } else {
-                            console.error('COO ID not found for selected manager.');
-                        }
-                    },
-                    error: function(xhr, textStatus, errorThrown) {
-                        console.error('Error fetching COO ID:', errorThrown);
-                    }
-                });
-            }
-        });
-    </script>
-    
-
-
 
     {{-- <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -547,78 +642,4 @@
             });
         });
     </script> --}}
-
-    <script>
-        $(document).ready(function() {
-            $("#formUsers").on("submit", function(e) {
-                e.preventDefault();
-
-                // Tampilkan pesan "loading" saat akan mengirim permintaan AJAX
-                Swal.fire({
-                    title: 'Mohon Tunggu!',
-                    html: 'Sedang memproses data...',
-                    allowOutsideClick: false,
-                    showConfirmButton: false,
-                    willOpen: () => {
-                        Swal.showLoading();
-                    },
-                });
-
-                // Kirim data ke server menggunakan AJAX
-                $.ajax({
-                    type: 'POST',
-                    url: '{{ route('users.store') }}',
-                    data: new FormData(this),
-                    processData: false,
-                    contentType: false,
-                    success: function(response) {
-                        // Tutup pesan "loading" saat berhasil
-                        Swal.close();
-
-                        if (response.success) {
-                            // Redirect ke halaman index dengan pesan "success"
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Berhasil!',
-                                text: 'Data berhasil disimpan.',
-                            }).then(function() {
-                                // Redirect ke halaman indeks setelah menutup SweetAlert
-                                window.location.href = '{{ route('users.index') }}';
-                            });
-                        } else {
-                            // Jika validasi gagal, tampilkan pesan-pesan kesalahan
-                            if (response.errors) {
-                                var errorMessages = '';
-                                for (var key in response.errors) {
-                                    if (response.errors.hasOwnProperty(key)) {
-                                        errorMessages += response.errors[key][0] + '<br>';
-                                    }
-                                }
-                                Swal.fire('Gagal', errorMessages, 'error');
-                            } else {
-                                Swal.fire('Gagal', 'Terjadi kesalahan saat menyimpan data',
-                                    'error');
-                            }
-                        }
-                    },
-                    error: function(xhr) {
-                        Swal.close();
-                        if (xhr.status === 422) {
-                            // Menampilkan pesan validasi error SweetAlert
-                            var errorMessages = '';
-                            var errors = xhr.responseJSON.errors;
-                            for (var key in errors) {
-                                if (errors.hasOwnProperty(key)) {
-                                    errorMessages += errors[key][0] + '<br>';
-                                }
-                            }
-                            Swal.fire('Gagal', errorMessages, 'error');
-                        } else {
-                            Swal.fire('Gagal', 'Terjadi kesalahan saat simpan data.', 'error');
-                        }
-                    },
-                });
-            });
-        });
-    </script>
 @endsection

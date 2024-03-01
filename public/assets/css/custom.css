@@ -17,6 +17,10 @@
     display: flex;
     justify-content: flex-start;
 }
+
+.bold{
+    font-weight: bold;
+}
 /* 
 label {
     margin-bottom: 0rem !important;

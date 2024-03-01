@@ -10,7 +10,8 @@
     @elseif ($leaves->status_manager == 1)
         <a class="btn btn-sm bg-info text-white font-weight-bold text-xs" data-toggle="tooltip" data-placement="top"
             title="Sedang Direview COO" data-leaves-id="{{ $leaves->id }}"
-            href="{{ route('request-leave.edit', $leaves->id) }}" <i class="fas fa-search mr-2"></i> Sedang Direview
+            href="{{ route('request-leave.edit', $leaves->id) }}">
+             <i class="fas fa-search mr-2"></i> Sedang Direview
             {{ $leaves->user->manager->position->name }}
         </a>
         <a class="btn btn-sm bg-primary text-white font-weight-bold text-xs" data-toggle="tooltip" data-placement="top"
@@ -40,7 +41,7 @@
         </a>
         <a class="btn btn-sm bg-primary text-white font-weight-bold text-xs" data-toggle="tooltip" data-placement="top"
             title="Sedang Direview COO" data-leaves-id="{{ $leaves->id }}"
-            href="{{ route('request-leave.show', $leaves->id) }}">
+            href="{{ route('request-leave.show',  $leaves->id) }}">
             <i class="fas fa-eye"></i>
         </a>
     @elseif ($leaves->status_manager == 3)

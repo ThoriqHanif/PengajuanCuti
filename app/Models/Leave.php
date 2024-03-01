@@ -26,7 +26,19 @@ class Leave extends Model
         'reason',
         'status_manager',
         'status_coo',
-        'slug'
+        'manager_id',
+        'coo_id',
+        'date_manager',
+        'date_coo',
+        'slug',
+    ];
+
+    protected $hidden = [
+        'type_id',
+        'slug',
+        'created_at',
+        'updated_at',
+        'deleted_at'
     ];
 
     public function user()

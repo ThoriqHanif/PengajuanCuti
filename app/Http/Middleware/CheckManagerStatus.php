@@ -25,6 +25,12 @@ class CheckManagerStatus
             return response()->view('pages.error.error-status-manager', [], 403); // Kode status 403 menunjukkan akses ditolak
         }
 
+        if (Auth::user()->position->level == 4 && $leave->status_manager !== 0) 
+        {
+            return response()->view('pages.error.error-status-manager', [], 403); // Kode status 403 menunjukkan akses ditolak
+
+        }
+
         return $next($request);
     }
 }

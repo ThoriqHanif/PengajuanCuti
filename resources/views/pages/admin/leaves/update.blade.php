@@ -219,9 +219,11 @@
                                         <tr>
                                             <th data-width="80">No</th>
                                             <th>Tahun</th>
-                                            <th class="text-center">Jumlah Cuti</th>
+                                            <th class="text-center">Total Cuti</th>
+                                            <th class="text-center">Cuti Tersedia</th>
+                                            <th class="text-center">Sedang Diproses</th>
                                             <th class="text-center">Terpakai</th>
-                                            <th class="text-right">Sisa</th>
+                                            <th class="text-right">Total Sisa</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -229,10 +231,11 @@
                                             <td>1</td>
                                             <td>{{ \Carbon\Carbon::parse($type->created_at)->format('Y') }}</td>
                                             <td class="text-center">{{ $type->duration }} {{ $type->time }}</td>
-                                            <td class="text-center">{{ $cutiTerpakaiPerType[$type->id] ?? 0 }}
-                                                Hari</td>
-                                            <td class="text-right">{{ $sisaPerType[$type->id] ?? $type->duration }}
-                                                Hari</td>
+                                            <td class="text-center">{{ $cutiTersediaPerType[$type->id] ?? $type->duration_in_days }} Hari</td>
+                                            <td class="text-center">{{ $sedangDiprosesPerType[$type->id] ?? 0 }} Hari</td>
+                                            <td class="text-center">{{ $cutiTerpakaiPerType[$type->id] ?? 0 }} Hari</td>
+
+                                            <td class="text-right">{{ $sisaPerType[$type->id] ?? $type->duration_in_days }} Hari</td>
                                         </tr>
                                     </tbody>
                                 </table>

@@ -134,8 +134,8 @@
                                             <label class="text-uppercase" style="font-family: monospace;">Lama
                                             </label><br>
                                             <p style="font-weight: bold; font-family: monospace" class="text-black">
-                                                {{ $leaves->duration }}
-                                            </p>
+                                                {{ $leaves->duration }} Hari
+                                            </p>  
 
                                         </div>
                                         <div class="col-md-4 mt-3">

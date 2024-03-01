@@ -66,13 +66,13 @@
             @can('index divisions')
                 <li class="{{ request()->is('divisions*', 'division/trashed') ? 'active' : '' }}">
                     <a href="{{ route('divisions.index') }}" class="nav-link"><i class="fas fa-list"></i><span> Data Divisi
-                            </span></a>
+                        </span></a>
                 </li>
             @endcan
             @can('index positions')
                 <li class="{{ request()->is('positions*', 'positions/trashed') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('positions.index') }}"><i
-                            class="fas fa-briefcase"></i><span> Data Posisi</span></a>
+                    <a class="nav-link" href="{{ route('positions.index') }}"><i class="fas fa-briefcase"></i><span> Data
+                            Posisi</span></a>
                 </li>
             @endcan
             @can('index roles')
@@ -88,6 +88,14 @@
                 </li>
             @endcan
 
+            @if (auth()->user()->position->level != 4)
+                <li class="menu-header">Laporan</li>
+
+                <li class="{{ request()->is('reports*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('report') }}"><i class="fas fa-clipboard"></i><span>
+                            Rekapitulasi Laporan</span></a>
+                </li>
+            @endif
 
             {{-- <li class="menu-header">Settings</li> --}}
         </ul>
